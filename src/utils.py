@@ -1,6 +1,4 @@
 import os
-
-from numpy import subtract
 from log import Logger
 
 
@@ -21,8 +19,7 @@ def is_csv_file(path: str):
 
 def chunks(lst, n):
     """Yield a list of n-sized chunks from lst."""
-    final = [lst[i * n:(i + 1) * n]
-             for i in range((len(lst) + n - 1) // n)]
+    final = [lst[i * n : (i + 1) * n] for i in range((len(lst) + n - 1) // n)]
     return final
 
 
@@ -33,7 +30,7 @@ def pretty_print(dictionary):
 
 def pair_subtract(lst):
     assert len(lst) == 2
-    return(lst[1] - lst[0])
+    return lst[1] - lst[0]
 
 
 def n_subtract(*args):
@@ -44,7 +41,17 @@ def n_subtract(*args):
 
 
 def m_average(*args):
+    """Calculate a running average of a list of lists"""
     s = 0
     for element in args:
-        s += (element[0] + element[1])
-    return s/2
+        s += element[0] + element[1]
+    return s / 2
+
+
+def running_avg(lst):
+    """Calculate a running average of a list"""
+    avg = 0
+    l = len(lst)
+    for element in lst:
+        avg += element
+    return avg / l
