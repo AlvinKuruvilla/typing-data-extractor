@@ -44,7 +44,14 @@ class TD_Data_Dictionary:
                 # print("line[{}] = {}".format(i, line))
             # for k, v in self.data_dict.items():
             #     print(k.get_key_name(), v.get_action(), v.get_time(), end=" \n")
-
+    def data(self):
+        return self.data_dict
+    def debug(self):
+        for k, v in self.data_dict.items():
+            print("Key:", k.get_key_name())
+            print("Action:", v.get_action())
+            print("Time:", v.get_time())
+            print("_"*10)
     def get_all_keys_pressed(self):
         """This gets every key pressed including repeats and keys that may have been pressed but not released for some reason. This will also remove instances of \x03 (ctrl+c)"""
         res = []
@@ -112,3 +119,60 @@ class TD_Data_Dictionary:
                 # print("In elif:", x, multi_avg)
         pretty_print(final)
         return final
+    def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
+        for key_set in nested_key_list:
+            # print ("Key Pair: ", key_set)
+            print("Press Press Time: ", self.get_press_press_time(key_set))
+            print("Press Release Time: ", self.get_press_release_time(key_set))
+            print("Release Press Time: ", self.get_release_press_time(key_set))
+            print("Release Release Time: ", self.get_release_release_time(key_set))
+
+        pass
+    def get_press_times_for_key(self, key: str):
+        #NOTE: This function requires that the 'key' parameter is of the form: "'key'"
+        #So for example, data_dict.get_press_times_for_key("'H'")
+        result = []
+        for k,v in self.data().items():
+            if k.get_key_name() == key and v.get_action() == "P":
+                result.append(float(v.get_time()))
+        return result
+    def get_release_times_for_key(self, key: str):
+        #NOTE: This function requires that the 'key' parameter is of the form: "'key'"
+        #So for example, data_dict.get_release_times_for_key("'H'")
+        result = []
+        for k,v in self.data().items():
+            if k.get_key_name() == key and v.get_action() == "R":
+                result.append(float(v.get_time()))
+        return result
+    def get_press_press_time(self, keys:List[str]):
+        key1 = keys[0]
+        key2 = keys[1]
+        key1_presses = self.get_press_times_for_key(key1)
+        key2_presses = self.get_press_times_for_key(key2)
+        avg1 = running_avg(key1_presses)
+        avg2 = running_avg(key2_presses)
+        return avg2 - avg1
+    def get_release_release_time(self, keys:List[str]):
+        key1 = keys[0]
+        key2 = keys[1]
+        key1_presses = self.get_release_times_for_key(key1)
+        key2_presses = self.get_release_times_for_key(key2)
+        avg1 = running_avg(key1_presses)
+        avg2 = running_avg(key2_presses)
+        return avg2 - avg1
+    def get_press_release_time(self, keys:List[str]):
+        key1 = keys[0]
+        key2 = keys[1]
+        key1_presses = self.get_press_times_for_key(key1)
+        key2_presses = self.get_release_times_for_key(key2)
+        avg1 = running_avg(key1_presses)
+        avg2 = running_avg(key2_presses)
+        return avg2 - avg1
+    def get_release_press_time(self, keys:List[str]):
+        key1 = keys[0]
+        key2 = keys[1]
+        key1_presses = self.get_press_times_for_key(key1)
+        key2_presses = self.get_press_times_for_key(key2)
+        avg1 = running_avg(key1_presses)
+        avg2 = running_avg(key2_presses)
+        return avg2 - avg1
