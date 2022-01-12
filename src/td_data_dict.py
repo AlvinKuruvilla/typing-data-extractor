@@ -8,6 +8,7 @@ from utils import (
 import csv
 from typing import List
 import collections
+from prettytable import PrettyTable
 
 
 class TD_Data_Value:
@@ -46,14 +47,17 @@ class TD_Data_Dictionary:
             #     print(k.get_key_name(), v.get_action(), v.get_time(), end=" \n")
     def data(self):
         return self.data_dict
+    #TODO: Maybe this should be in a table instead
     def debug(self):
+        table = PrettyTable()
+        table.field_names = ["Key", "Action", "Time"]
         for k, v in self.data_dict.items():
-            print("Key:", k.get_key_name())
-            print("Action:", v.get_action())
-            print("Time:", v.get_time())
-            print("_"*10)
+            table.add_row([k.get_key_name(), v.get_action(), v.get_time()])
+        print(table.get_string())
+
     def get_all_keys_pressed(self):
-        """This gets every key pressed including repeats and keys that may have been pressed but not released for some reason. This will also remove instances of \x03 (ctrl+c)"""
+        """This gets every key pressed including repeats and keys that may have been pressed but not released for some reason. 
+           This will also remove instances of \x03 (ctrl+c)"""
         res = []
         for k, _ in self.data_dict.items():
             if k.get_key_name() != "'\\x03'":
@@ -80,11 +84,13 @@ class TD_Data_Dictionary:
                 return pairs
             pairs.append([unique[i], unique[i + 1]])
             i += 1
-
+    #TODO: Maybe this should be in a table instead
     def calculate_key_hit_time(self):
         keys = self.get_unique_keys()
         store = collections.defaultdict(list)
         final = collections.defaultdict(float)
+        table = PrettyTable()
+        table.field_names = ["Key", "Hit Time"]
         res = collections.defaultdict(list)
         for key in keys:
             for i, j in self.data_dict.items():
@@ -117,8 +123,10 @@ class TD_Data_Dictionary:
                 multi_avg = running_avg(subtraction_holder)
                 final[x] = multi_avg
                 # print("In elif:", x, multi_avg)
-        pretty_print(final)
-        return final
+        for a,b in final.items():
+            table.add_row([a,b])
+        print(table.get_string())
+    #TODO: Maybe this should be in a table instead
     def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
         for key_set in nested_key_list:
             # print ("Key Pair: ", key_set)
@@ -126,7 +134,6 @@ class TD_Data_Dictionary:
             print("Press Release Time: ", self.get_press_release_time(key_set))
             print("Release Press Time: ", self.get_release_press_time(key_set))
             print("Release Release Time: ", self.get_release_release_time(key_set))
-
         pass
     def get_press_times_for_key(self, key: str):
         #NOTE: This function requires that the 'key' parameter is of the form: "'key'"

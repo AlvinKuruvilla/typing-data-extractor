@@ -23,11 +23,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not is_csv_file(input_path):
         sys.exit()
     data_dict = TD_Data_Dictionary(input_path)
-    # data_dict.calculate_key_hit_time()
+    data_dict.calculate_key_hit_time()
     # data_dict.debug()
-    pairs = data_dict.get_key_pairs()
+    # pairs = data_dict.get_key_pairs()
 
     #print(pairs)
-    data_dict.calculate_key_interval_time(pairs)
+    # data_dict.calculate_key_interval_time(pairs)
 if __name__ == "__main__":
     exit(main())
