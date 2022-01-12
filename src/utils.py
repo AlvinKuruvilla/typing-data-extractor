@@ -3,14 +3,14 @@ from log import Logger
 
 
 def is_csv_file(path: str):
-    log = Logger("path")
+    log = Logger()
     is_file = os.path.isfile(path)
     if is_file:
         # Now check that the extension is CSV
         if path.lower().endswith(".csv"):
             return True
         else:
-            log.km_fatal("The provided path is not a CSV file")
+            log.km_custom("The provided path was not a file", "<blue>")
             return False
     else:
         log.km_fatal("The provided path was not a file")
