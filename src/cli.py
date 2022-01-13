@@ -13,17 +13,24 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     )
     args_parser.add_argument(
         "Path",
-        metavar="path",
+        metavar="First Path",
         type=str,
-        help="The path to the csv file to extract typing dynamics data from",
+        help="The path to the first csv file to extract typing dynamics data from",
+    )
+    args_parser.add_argument(
+        "Other",
+        metavar="Other Path",
+        type=str,
+        help="The path to the other csv file to extract typing dynamics data from",
     )
     args = args_parser.parse_args(argv)
     input_path = args.Path
+    other_path = args.Other
 
-    if not is_csv_file(input_path):
+    if not is_csv_file(input_path) or not is_csv_file(other_path):
         sys.exit()
-    data_dict = TD_Data_Dictionary(input_path)
-    data_dict.calculate_key_hit_time()
+    # data_dict = TD_Data_Dictionary(input_path)
+    # data_dict.calculate_key_hit_time()
     # data_dict.debug()
     # pairs = data_dict.get_key_pairs()
 
