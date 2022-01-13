@@ -10,10 +10,10 @@ def is_csv_file(path: str):
         if path.lower().endswith(".csv"):
             return True
         else:
-            log.km_custom("The provided path was not a file", "<blue>")
+            log.km_fatal(path + ", is not a csv file")
             return False
     else:
-        log.km_fatal("The provided path was not a file")
+        log.km_fatal(path + " , is not a file")
         return False
 
 
