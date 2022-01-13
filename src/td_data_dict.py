@@ -1,7 +1,6 @@
 from utils import (
     is_csv_file,
     pair_subtract,
-    pretty_print,
     chunks,
     running_avg,
 )
@@ -84,7 +83,7 @@ class TD_Data_Dictionary:
                 return pairs
             pairs.append([unique[i], unique[i + 1]])
             i += 1
-    #TODO: Maybe this should be in a table instead
+
     def calculate_key_hit_time(self):
         keys = self.get_unique_keys()
         store = collections.defaultdict(list)
@@ -126,6 +125,8 @@ class TD_Data_Dictionary:
         for a,b in final.items():
             table.add_row([a,b])
         print(table.get_string())
+
+        return final
     #TODO: Maybe this should be in a table instead
     def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
         for key_set in nested_key_list:
