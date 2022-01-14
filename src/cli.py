@@ -34,7 +34,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # data_dict.debug()
     # pairs = data_dict.get_key_pairs()
 
-    #print(pairs)
+    # print(pairs)
     # data_dict.calculate_key_interval_time(pairs)
+
+
 if __name__ == "__main__":
     exit(main())

@@ -44,9 +44,11 @@ class TD_Data_Dictionary:
                 # print("line[{}] = {}".format(i, line))
             # for k, v in self.data_dict.items():
             #     print(k.get_key_name(), v.get_action(), v.get_time(), end=" \n")
+
     def data(self):
         return self.data_dict
-    #TODO: Maybe this should be in a table instead
+
+    # TODO: Maybe this should be in a table instead
     def debug(self):
         table = PrettyTable()
         table.field_names = ["Key", "Action", "Time"]
@@ -55,8 +57,8 @@ class TD_Data_Dictionary:
         print(table.get_string())
 
     def get_all_keys_pressed(self):
-        """This gets every key pressed including repeats and keys that may have been pressed but not released for some reason. 
-           This will also remove instances of \x03 (ctrl+c)"""
+        """This gets every key pressed including repeats and keys that may have been pressed but not released for some reason.
+        This will also remove instances of \x03 (ctrl+c)"""
         res = []
         for k, _ in self.data_dict.items():
             if k.get_key_name() != "'\\x03'":
@@ -122,12 +124,13 @@ class TD_Data_Dictionary:
                 multi_avg = running_avg(subtraction_holder)
                 final[x] = multi_avg
                 # print("In elif:", x, multi_avg)
-        for a,b in final.items():
-            table.add_row([a,b])
+        for a, b in final.items():
+            table.add_row([a, b])
         print(table.get_string())
 
         return final
-    #TODO: Maybe this should be in a table instead
+
+    # TODO: Maybe this should be in a table instead
     def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
         for key_set in nested_key_list:
             # print ("Key Pair: ", key_set)
@@ -136,23 +139,26 @@ class TD_Data_Dictionary:
             print("Release Press Time: ", self.get_release_press_time(key_set))
             print("Release Release Time: ", self.get_release_release_time(key_set))
         pass
+
     def get_press_times_for_key(self, key: str):
-        #NOTE: This function requires that the 'key' parameter is of the form: "'key'"
-        #So for example, data_dict.get_press_times_for_key("'H'")
+        # NOTE: This function requires that the 'key' parameter is of the form: "'key'"
+        # So for example, data_dict.get_press_times_for_key("'H'")
         result = []
-        for k,v in self.data().items():
+        for k, v in self.data().items():
             if k.get_key_name() == key and v.get_action() == "P":
                 result.append(float(v.get_time()))
         return result
+
     def get_release_times_for_key(self, key: str):
-        #NOTE: This function requires that the 'key' parameter is of the form: "'key'"
-        #So for example, data_dict.get_release_times_for_key("'H'")
+        # NOTE: This function requires that the 'key' parameter is of the form: "'key'"
+        # So for example, data_dict.get_release_times_for_key("'H'")
         result = []
-        for k,v in self.data().items():
+        for k, v in self.data().items():
             if k.get_key_name() == key and v.get_action() == "R":
                 result.append(float(v.get_time()))
         return result
-    def get_press_press_time(self, keys:List[str]):
+
+    def get_press_press_time(self, keys: List[str]):
         key1 = keys[0]
         key2 = keys[1]
         key1_presses = self.get_press_times_for_key(key1)
@@ -160,7 +166,8 @@ class TD_Data_Dictionary:
         avg1 = running_avg(key1_presses)
         avg2 = running_avg(key2_presses)
         return avg2 - avg1
-    def get_release_release_time(self, keys:List[str]):
+
+    def get_release_release_time(self, keys: List[str]):
         key1 = keys[0]
         key2 = keys[1]
         key1_presses = self.get_release_times_for_key(key1)
@@ -168,7 +175,8 @@ class TD_Data_Dictionary:
         avg1 = running_avg(key1_presses)
         avg2 = running_avg(key2_presses)
         return avg2 - avg1
-    def get_press_release_time(self, keys:List[str]):
+
+    def get_press_release_time(self, keys: List[str]):
         key1 = keys[0]
         key2 = keys[1]
         key1_presses = self.get_press_times_for_key(key1)
@@ -176,7 +184,8 @@ class TD_Data_Dictionary:
         avg1 = running_avg(key1_presses)
         avg2 = running_avg(key2_presses)
         return avg2 - avg1
-    def get_release_press_time(self, keys:List[str]):
+
+    def get_release_press_time(self, keys: List[str]):
         key1 = keys[0]
         key2 = keys[1]
         key1_presses = self.get_press_times_for_key(key1)
