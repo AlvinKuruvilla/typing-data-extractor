@@ -132,8 +132,12 @@ class TD_Data_Dictionary:
 
     # TODO: Maybe this should be in a table instead
     def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
+        # key_set = nested_key_list[0]
+        # self.get_press_press_time(key_set)
+        # print("Press Release Time: ", self.get_press_release_time(key_set))
+        # print("Release Press Time: ", self.get_release_press_time(key_set))
+        # print("Release Release Time: ", self.get_release_release_time(key_set))
         for key_set in nested_key_list:
-            # print ("Key Pair: ", key_set)
             print("Press Press Time: ", self.get_press_press_time(key_set))
             print("Press Release Time: ", self.get_press_release_time(key_set))
             print("Release Press Time: ", self.get_release_press_time(key_set))
@@ -188,8 +192,8 @@ class TD_Data_Dictionary:
     def get_release_press_time(self, keys: List[str]):
         key1 = keys[0]
         key2 = keys[1]
-        key1_presses = self.get_press_times_for_key(key1)
-        key2_presses = self.get_press_times_for_key(key2)
+        key1_presses = self.get_release_times_for_key(key1)
+        key2_presses = self.get_release_times_for_key(key2)
         avg1 = running_avg(key1_presses)
         avg2 = running_avg(key2_presses)
         return avg2 - avg1
