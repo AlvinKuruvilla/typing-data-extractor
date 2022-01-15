@@ -34,7 +34,6 @@ class TD_Data_Dictionary:
         self.csv_data_path = csv_data_path
         is_csv_file(self.csv_data_path)
         self.data_dict = {}
-        is_csv_file(self.csv_data_path)
         with open(self.csv_data_path, "r") as file:
             reader = csv.reader(file)
             # Skip the header and move the reader forward to next line
@@ -197,3 +196,6 @@ class TD_Data_Dictionary:
         avg1 = running_avg(key1_presses)
         avg2 = running_avg(key2_presses)
         return avg2 - avg1
+
+    def path(self):
+        return self.csv_data_path
