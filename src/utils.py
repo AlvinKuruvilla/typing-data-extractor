@@ -55,3 +55,11 @@ def running_avg(lst):
     for element in lst:
         avg += element
     return avg / l
+
+
+def is_float(n: str):
+    try:
+        float(n)
+        return True
+    except ValueError:
+        return False

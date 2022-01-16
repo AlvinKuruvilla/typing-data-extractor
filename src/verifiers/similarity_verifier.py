@@ -2,7 +2,8 @@
 
 import statistics
 from log import Logger
-from verifier_utils import find_matching_keys
+from .verifier_utils import find_matching_keys
+from td_data_dict import TD_Data_Dictionary
 
 
 class SimilarityVerifier:
@@ -13,6 +14,8 @@ class SimilarityVerifier:
     ):
         self.template_file_path = template_file_path
         self.verification_file_path = verification_file_path
+        self.template_td_data_dict = TD_Data_Dictionary(self.template_file_path)
+        self.verification_td_data_dict = TD_Data_Dictionary(self.verification_file_path)
 
     def template_path(self):
         return self.template_file_path
@@ -41,7 +44,7 @@ class SimilarityVerifier:
             return
         t_latency = template_hit_dict.get(key)
         v_latency = verification_hit_dict.get(key)
-        return list(t_latency, v_latency)
+        return [t_latency, v_latency]
 
     def calculate_similarity_score(self):
         matches = find_matching_keys(
@@ -54,7 +57,8 @@ class SimilarityVerifier:
         latencies = self.find_latency_averages(key)
         assert len(latencies) == 2
         sdev = self.calculate_standard_deviation(latencies)
-        if sdev >= 1:
+        # print("The standard deviation is: ", sdev)
+        if sdev <= 1:
             return True
         else:
             return False
@@ -67,4 +71,4 @@ class SimilarityVerifier:
         for key in matches:
             if self.is_key_valid(key):
                 valids.append(key)
-        return valids
+        print("Valids: ", valids)

@@ -13,3 +13,10 @@ def find_matching_keys(template_file_path: str, verification_file_path: str) -> 
         if key in verification_keys:
             matches.append(key)
     return matches
+
+
+def is_between(comp, start, end):
+    if start <= comp and comp <= end:
+        return True
+    else:
+        return False

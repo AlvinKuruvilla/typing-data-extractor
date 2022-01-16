@@ -4,5 +4,4 @@ results
 __pycache__/
 .env
 ./env
-src/pd_ops.py
 testdata
