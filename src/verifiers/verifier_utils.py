@@ -21,8 +21,3 @@ def is_between(comp, start, end):
         return True
     else:
         return False
-
-
-def float_sort(l: List[str]):
-    l.sort(key=float)
-    return l

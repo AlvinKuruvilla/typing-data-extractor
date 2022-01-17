@@ -3,9 +3,8 @@
 from math import pow
 from td_data_dict import TD_Data_Dictionary
 from log import Logger
-from typing import List
 
-from verifiers.verifier_utils import find_matching_keys, float_sort
+from verifiers.verifier_utils import find_matching_keys
 
 # NOTE: As far as I can tell this verifier operates on the entire set of verification data
 # i.e. it considers all the KHT values from the verification data as a whole sample and then compares the whole thing
@@ -37,29 +36,6 @@ class RelativeVerifier:
         self.verification_file_path = verification_file_path
         self.template_td_data_dict = TD_Data_Dictionary(self.template_file_path)
         self.verification_td_data_dict = TD_Data_Dictionary(self.verification_file_path)
-        self.template_table = self.get_table(self.template_file_path, True)
-        self.verification_table = self.get_table(self.verification_file_path)
-
-    # TODO: I think here to make our two tables we need to use the dictionary_sort_by_value() method
-    def get_table(self, path: str, sort_keys: bool = False) -> List[int]:
-        log = Logger()
-        if path == self.template_file_path:
-            if sort_keys:
-                return float_sort(self.template_td_data_dict.times())
-            else:
-                return self.template_td_data_dict.times()
-        elif path == self.verification_file_path:
-            if sort_keys:
-                return float_sort(self.verification_td_data_dict.times())
-            else:
-                return self.verification_td_data_dict.times()
-        else:
-            log.km_fatal(
-                "The provided path"
-                + path
-                + "does not match the template or verification file paths"
-            )
-            return
 
     def degree_of_disorder(self) -> int:
         # The algorithm to find degree of disorder is as follows:
@@ -102,7 +78,8 @@ class RelativeVerifier:
 
     def max_degree_of_disorder(self) -> float:
         # To calculate the maximum degree of disorder for a table with n elements use the formula (n^2 -1)/2
-        n = len(self.verification_table)
+        verification_hit_dict = self.template_td_data_dict.calculate_key_hit_time()
+        n = len(list(verification_hit_dict.keys()))
         return (pow(n, 2) - 1) / 2
 
     def is_key_valid(self) -> bool:
@@ -117,11 +94,8 @@ class RelativeVerifier:
         # Finds the distance between a given entry from the template table and
         # the corresponding key letter entry in the verification table
         log = Logger()
-        store = {}
         template_hit_dict = self.template_td_data_dict.calculate_key_hit_time()
-        sorted_template_list = sorted(template_hit_dict.items(), key=lambda x: x[1])
-        for i in sorted_template_list:
-            store[str(i[0])] = str(i[1])
+        store = dictionary_sort_by_value(template_hit_dict)
         distance = 0
         verification_keys = find_matching_keys(
             self.template_file_path, self.verification_file_path
