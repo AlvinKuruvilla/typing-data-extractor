@@ -3,13 +3,29 @@
 from math import pow
 from td_data_dict import TD_Data_Dictionary
 from log import Logger
-from typing import List, Optional
+from typing import List
+
+from verifiers.verifier_utils import find_matching_keys, float_sort
 
 # NOTE: As far as I can tell this verifier operates on the entire set of verification data
 # i.e. it considers all the KHT values from the verification data as a whole sample and then compares the whole thing
 # to the entire set of template data which is treated similarly
 # For our use case we may want to treat each KHT value as its own individual sample and
 # then only compare it to the corresponding KHT in the template data.
+
+
+def dictionary_sort_by_value(d, ascending=True):
+    """Performs a sort on a dictionary by value
+    Defaults to an ascending sort order
+    """
+    sorted_dictionary = {}
+    if ascending:
+        sorted_list = sorted(d.items(), key=lambda x: x[1])
+    if ascending == False:
+        sorted_list = sorted(d.items(), key=lambda x: x[1], reverse=True)
+    for i in sorted_list:
+        sorted_dictionary[str(i[0])] = str(i[1])
+    return sorted_dictionary
 
 
 class RelativeVerifier:
@@ -24,25 +40,26 @@ class RelativeVerifier:
         self.template_table = self.get_table(self.template_file_path, True)
         self.verification_table = self.get_table(self.verification_file_path)
 
-    def get_table(self, path: str, sort_keys: bool = False) -> Optional[List[int]]:
+    # TODO: I think here to make our two tables we need to use the dictionary_sort_by_value() method
+    def get_table(self, path: str, sort_keys: bool = False) -> List[int]:
         log = Logger()
         if path == self.template_file_path:
             if sort_keys:
-                return list(self.template_td_data_dict.values()).sort()
+                return float_sort(self.template_td_data_dict.times())
             else:
-                return list(self.template_td_data_dict.values())
+                return self.template_td_data_dict.times()
         elif path == self.verification_file_path:
             if sort_keys:
-                return list(self.verification_td_data_dict.values()).sort()
+                return float_sort(self.verification_td_data_dict.times())
             else:
-                return list(self.verification_td_data_dict.values())
+                return self.verification_td_data_dict.times()
         else:
             log.km_fatal(
                 "The provided path"
                 + path
                 + "does not match the template or verification file paths"
             )
-            return None
+            return
 
     def degree_of_disorder(self) -> int:
         # The algorithm to find degree of disorder is as follows:
@@ -69,7 +86,10 @@ class RelativeVerifier:
         # Thus we should iterate every element in the template table and keep a running sum of its distance
         # to the corresponding entry in the verification table using the self.find_distance() function.
         disorder = 0
-        for entry in self.verification_table:
+        verification_keys = find_matching_keys(
+            self.template_file_path, self.verification_file_path
+        )
+        for entry in verification_keys:
             disorder += self.find_distance(entry)
         return disorder
 
@@ -78,14 +98,14 @@ class RelativeVerifier:
         #   1) Find the degree of disorder for the entire table
         #   2) Calculate the maximum degree of disorder for a table with n elements accroding to the formula (n^2 -1)/2
         #   3) Divide the degree of disorder with the maximum calculated in the previous step
-        return self.degree_of_disorder() / self.absolute_degree_of_disorder()
+        return self.degree_of_disorder() / self.max_degree_of_disorder()
 
     def max_degree_of_disorder(self) -> float:
         # To calculate the maximum degree of disorder for a table with n elements use the formula (n^2 -1)/2
         n = len(self.verification_table)
         return (pow(n, 2) - 1) / 2
 
-    def is_valid(self) -> bool:
+    def is_key_valid(self) -> bool:
         # Maybe to see if typing samples are valid we compare the absolute degree of disorder with a given
         # threshold value and if it is less than the threshold the sample is considered valid
         if self.absolute_degree_of_disorder() < self.THRESHOLD:
@@ -95,18 +115,30 @@ class RelativeVerifier:
 
     def find_distance(self, entry) -> int:
         # Finds the distance between a given entry from the template table and
-        # the corresponding entry in the verification table
+        # the corresponding key letter entry in the verification table
         log = Logger()
+        store = {}
+        template_hit_dict = self.template_td_data_dict.calculate_key_hit_time()
+        sorted_template_list = sorted(template_hit_dict.items(), key=lambda x: x[1])
+        for i in sorted_template_list:
+            store[str(i[0])] = str(i[1])
         distance = 0
-        if not entry in self.template_table:
+        verification_keys = find_matching_keys(
+            self.template_file_path, self.verification_file_path
+        )
+        sorted_template_keys = list(store.keys())
+
+        if not entry in sorted_template_keys:
             log.km_fatal(
-                "Provided entry" + entry + "is not in the sorted template table"
+                "Provided entry" + entry + "is not in the list of sorted template keys"
             )
             return
-        if not entry in self.verification_table:
-            log.km_fatal("Provided entry" + entry + "is not in the verification table")
+        if not entry in verification_keys:
+            log.km_fatal(
+                "Provided entry" + entry + "is not in the list of verification keys"
+            )
             return
-        for cell in self.verification_table:
+        for cell in verification_keys:
             if cell == entry:
                 return distance
             else:
@@ -118,3 +150,13 @@ class RelativeVerifier:
 
     def verification_path(self):
         return self.verification_file_path
+
+    def find_all_valid_keys(self):
+        valids = []
+        matches = find_matching_keys(
+            self.template_file_path, self.verification_file_path
+        )
+        for key in matches:
+            if self.is_key_valid():
+                valids.append(key)
+        print("Valids: ", valids)

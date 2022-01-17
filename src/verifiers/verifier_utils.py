@@ -1,4 +1,5 @@
 from td_data_dict import TD_Data_Dictionary
+from typing import List
 
 
 def find_matching_keys(template_file_path: str, verification_file_path: str) -> list:
@@ -20,3 +21,8 @@ def is_between(comp, start, end):
         return True
     else:
         return False
+
+
+def float_sort(l: List[str]):
+    l.sort(key=float)
+    return l

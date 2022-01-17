@@ -2,12 +2,17 @@ import argparse
 import sys
 from typing import Optional, Sequence
 from td_data_dict import TD_Data_Dictionary
-
+from verifiers.absolute_verifier import AbsoluteVerifier
 from utils import is_csv_file
+from verifiers.relative_verifier import RelativeVerifier
+from rich.traceback import install
+from verifiers.verifier_utils import find_matching_keys
+
+install()
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
-
+    test = {}
     args_parser = argparse.ArgumentParser(
         description="Extract typing dynamics data from a csv file"
     )
@@ -29,13 +34,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if not is_csv_file(input_path) or not is_csv_file(other_path):
         sys.exit()
-    # data_dict = TD_Data_Dictionary(input_path)
-    # data_dict.calculate_key_hit_time()
+    data_dict = TD_Data_Dictionary(input_path)
+    # data_dict.calculate_key_hit_time
     # data_dict.debug()
     # pairs = data_dict.get_key_pairs()
 
     # print(pairs)
     # data_dict.calculate_key_interval_time(pairs)
+
+    comp_dict = TD_Data_Dictionary(other_path)
+    # comp_dict.key_hit_time_keys()
+    hits = data_dict.calculate_key_hit_time()
+    # print(comp_dict.calculate_key_hit_time())
+    # print(find_matching_keys(input_path, other_path))
+    r_verifier = RelativeVerifier(input_path, other_path, 2.0)
+    r_verifier.find_all_valid_keys()
 
 
 if __name__ == "__main__":
