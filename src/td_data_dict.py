@@ -1,9 +1,4 @@
-from utils import (
-    is_csv_file,
-    pair_subtract,
-    chunks,
-    running_avg,
-)
+from utils import is_csv_file, pair_subtract, chunks, running_avg, is_float
 import csv
 from typing import List
 import collections
@@ -38,14 +33,22 @@ class TD_Data_Dictionary:
             reader = csv.reader(file)
             # Skip the header and move the reader forward to next line
             _ = next(reader)
+            _ = next(reader)
             for i, line in enumerate(reader):
                 self.data_dict[TD_Data_Key(line[1])] = TD_Data_Value([line[0], line[2]])
-                # print("line[{}] = {}".format(i, line))
+            #     print("line[{}] = {}".format(i, line))
             # for k, v in self.data_dict.items():
             #     print(k.get_key_name(), v.get_action(), v.get_time(), end=" \n")
 
     def data(self):
         return self.data_dict
+
+    def times(self):
+        ret = []
+        for _, v in self.data().items():
+            if is_float(v.get_time()):
+                ret.append(v.get_time())
+        return ret
 
     # TODO: Maybe this should be in a table instead
     def debug(self):
@@ -86,6 +89,23 @@ class TD_Data_Dictionary:
             i += 1
 
     def calculate_key_hit_time(self):
+        #! FIXME: So there is an issue in generating the times because we greedily try to remove non paired keys
+        #! i.e. like a lone 'c' key that had a registered press event but no corresponding release event.
+        #! We also try to minimize the number of entries we process by checking if these entries are paired
+        #! into groups of two.
+        #! If one keyset has let's say three entries, maybe due to having that one lone 'c' that has a
+        #! press but no corresponding release event, then we would drop it. But we don't necessarily want to do
+        #! that because any number of entries, in the above case 2 of the entries, were viable data
+
+        # The algorithm we might want here is:
+        # - We start at the first press entry and look for the corresponding release entry and store those in an array, or
+        # we calculate the proper value for that set
+        # - After that we continue iterating from where we foind the release entry and find the press/release combination
+        # - If we find anoher combination we apply a similar procedure to the first combination and combine the results
+        # with the existing results and remove those entries from the master
+        # - If we find just press or release entries with no combination we still remove them from the master but do not
+        # perform any calculations
+        # - We then repeat a similar process from the beginning starting with he next press entry we find
         keys = self.get_unique_keys()
         store = collections.defaultdict(list)
         final = collections.defaultdict(float)
@@ -125,8 +145,7 @@ class TD_Data_Dictionary:
                 # print("In elif:", x, multi_avg)
         for a, b in final.items():
             table.add_row([a, b])
-        print(table.get_string())
-
+        # print(table.get_string())
         return final
 
     # TODO: Maybe this should be in a table instead
@@ -199,3 +218,23 @@ class TD_Data_Dictionary:
 
     def path(self):
         return self.csv_data_path
+
+    def get_press_release_combinations(self, key: str):
+        res = []
+        # NOTE: This function requires that the 'key' parameter is of the form: "'key'"
+        for k, v in self.data_dict.items():
+            if k.get_key_name() == key.get_key_name():
+                res.append(v.get_time())
+        if len(res) % 2 == 0 and len(res) > 0:
+            return res
+        else:
+            while True:
+                if len(res) % 2 == 0:
+                    return res
+                elif len(res) % 2 != 0:
+                    res.pop(-1)
+
+    def key_hit_time_keys(self):
+        res = self.get_all_keys_pressed()
+        print(res[0])
+        print(self.get_press_times_for_key(res[0]))
