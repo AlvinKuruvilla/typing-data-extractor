@@ -12,7 +12,7 @@ class NotCSVFileError(Exception):
         message -- explanation of the error
     """
 
-    def __init__(self, path, message="Provided path is not a csv file"):
+    def __init__(self, path, message):
         self.path = path
         self.message = message
         super().__init__(self.message)
@@ -27,13 +27,14 @@ def check_gen_dir():
 
 
 def is_csv_file(path: str):
-    is_file = os.path.isfile(path)
+    is_file = os.path.isfile(os.path.join(os.getcwd(), "testdata", "bbmass", path))
     if is_file:
+
         # Now check that the extension is CSV
         if path.lower().endswith(".csv"):
             return True
         else:
-            raise NotCSVFileError()
+            return False
     else:
         return False
 
@@ -61,6 +62,9 @@ class BBMASSConverter:
                 for row in reader:
                     rows.append(row)
                 return rows
+
+    def get_bbmass_directory_path(self):
+        return self.bbmass_dir_path
 
     def print_csv_file(self, filename):
         filepath = os.path.join(os.getcwd(), "testdata", self.bbmass_dir_path, filename)
@@ -111,12 +115,29 @@ class BBMASSConverter:
                 data = [actions[i], keys[i], times[i]]
                 writer.writerow(data)
 
+    def create_new_data(self, filename: str):
+        if is_csv_file(filename):
+            keys = conv.save_key_column(filename)
+            times = conv.save_time_column(filename)
+            actions = conv.save_action_column(filename)
+            update_action_column = conv.update_action_column(actions)
+            return (keys, times, update_action_column)
+        else:
+            raise NotCSVFileError(filename, filename + " is not a CSV file")
+
 
 if __name__ == "__main__":
     check_gen_dir()
     conv = BBMASSConverter("bbmass")
-    keys = conv.save_key_column("User1.csv")
-    times = conv.save_time_column("User1.csv")
-    actions = conv.save_action_column("User1.csv")
-    update_action_column = conv.update_action_column(actions)
-    conv.create_new_csv(keys, update_action_column, times, "gen_User1.csv")
+    dir_path = os.path.join(os.getcwd(), "testdata", conv.get_bbmass_directory_path())
+    for filename in os.listdir(dir_path):
+        if is_csv_file(filename):
+            # print(filename)
+            filepath = os.path.join(dir_path, filename)
+            # print(filepath)
+            keys, update_action_column, times = conv.create_new_data(filename)
+            conv.create_new_csv(keys, update_action_column, times, "gen_" + filename)
+        elif is_csv_file(filename) == False:
+            # Here we don't want to raise an exception because it is possible that a hidden file could stop the iteration
+            # so rather than penalize the user, we can just skip it
+            continue
