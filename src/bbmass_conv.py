@@ -2,6 +2,9 @@ import os
 import csv
 import pandas as pd
 from pathlib import Path
+from rich.traceback import install
+
+install()
 
 
 class NotCSVFileError(Exception):

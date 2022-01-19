@@ -12,7 +12,6 @@ install()
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
-    test = {}
     args_parser = argparse.ArgumentParser(
         description="Extract typing dynamics data from a csv file"
     )
@@ -44,11 +43,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     comp_dict = TD_Data_Dictionary(other_path)
     # comp_dict.key_hit_time_keys()
-    hits = data_dict.calculate_key_hit_time()
-    # print(comp_dict.calculate_key_hit_time())
+    # hits = data_dict.calculate_key_hit_time()
+    comp_dict.calculate_key_hold_time()
     # print(find_matching_keys(input_path, other_path))
-    r_verifier = RelativeVerifier(input_path, other_path, 2.0)
-    r_verifier.find_all_valid_keys()
+    # r_verifier = RelativeVerifier(input_path, other_path, 2.0)
+    # r_verifier.find_all_valid_keys()
 
 
 if __name__ == "__main__":
