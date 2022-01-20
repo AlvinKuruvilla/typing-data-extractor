@@ -99,7 +99,7 @@ class TD_Data_Dictionary:
         store = collections.defaultdict(list)
         final = collections.defaultdict(float)
         table = PrettyTable()
-        table.field_names = ["Key", "Hit Time"]
+        table.field_names = ["Key", "Hold Time"]
         res = collections.defaultdict(list)
         for key in keys:
             for i, j in self.data_dict.items():
