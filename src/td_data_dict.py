@@ -147,17 +147,15 @@ class TD_Data_Dictionary:
 
     # TODO: Maybe this should be in a table instead
     def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
-        # key_set = nested_key_list[0]
-        # self.get_press_press_time(key_set)
-        # print("Press Release Time: ", self.get_press_release_time(key_set))
-        # print("Release Press Time: ", self.get_release_press_time(key_set))
-        # print("Release Release Time: ", self.get_release_release_time(key_set))
+        store = {}
         for key_set in nested_key_list:
-            print("Press Press Time: ", self.get_press_press_time(key_set))
-            print("Press Release Time: ", self.get_press_release_time(key_set))
-            print("Release Press Time: ", self.get_release_press_time(key_set))
-            print("Release Release Time: ", self.get_release_release_time(key_set))
-        pass
+            store[tuple(key_set)] = [
+                self.get_press_press_time(key_set),
+                self.get_press_release_time(key_set),
+                self.get_release_press_time(key_set),
+                self.get_release_release_time(key_set),
+            ]
+        return store
 
     def get_press_times_for_key(self, key: str):
         # NOTE: This function requires that the 'key' parameter is of the form: "'key'"
