@@ -5,3 +5,6 @@ __pycache__/
 .env
 ./env
 testdata
+.DS_Store
+*.png
+*.pstats
