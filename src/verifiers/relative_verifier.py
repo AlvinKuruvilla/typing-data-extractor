@@ -4,7 +4,7 @@ from math import pow
 from td_data_dict import TD_Data_Dictionary
 from log import Logger
 
-from verifiers.verifier_utils import find_matching_keys
+from verifiers.verifier_utils import find_matching_keys, find_matching_interval_keys
 
 # NOTE: As far as I can tell this verifier operates on the entire set of verification data
 # i.e. it considers all the KHT values from the verification data as a whole sample and then compares the whole thing
@@ -37,7 +37,7 @@ class RelativeVerifier:
         self.template_td_data_dict = TD_Data_Dictionary(self.template_file_path)
         self.verification_td_data_dict = TD_Data_Dictionary(self.verification_file_path)
 
-    def degree_of_disorder(self) -> int:
+    def degree_of_disorder(self, use_interval=False) -> int:
         # The algorithm to find degree of disorder is as follows:
         # So let's say we have the two tables listed below
         # To find the disorder of table V, in this example it would be the first table, we calculate the
@@ -62,44 +62,73 @@ class RelativeVerifier:
         # Thus we should iterate every element in the template table and keep a running sum of its distance
         # to the corresponding entry in the verification table using the self.find_distance() function.
         disorder = 0
-        verification_keys = find_matching_keys(
-            self.template_file_path, self.verification_file_path
-        )
-        for entry in verification_keys:
-            disorder += self.find_distance(entry)
-        return disorder
+        if use_interval == False:
+            verification_keys = find_matching_keys(
+                self.template_file_path, self.verification_file_path
+            )
+            for entry in verification_keys:
+                disorder += self.find_distance(entry)
+            return disorder
+        else:
+            verification_keys = find_matching_interval_keys(
+                self.template_file_path, self.verification_file_path
+            )
+            for entry in verification_keys:
+                disorder += self.find_distance(entry, True)
+            return disorder
 
-    def absolute_degree_of_disorder(self) -> float:
+    def absolute_degree_of_disorder(self, use_interval=False) -> float:
         # The formula to calculate the absolute degree of disorder is simply:
         #   1) Find the degree of disorder for the entire table
         #   2) Calculate the maximum degree of disorder for a table with n elements accroding to the formula (n^2 -1)/2
         #   3) Divide the degree of disorder with the maximum calculated in the previous step
-        return self.degree_of_disorder() / self.max_degree_of_disorder()
+        if use_interval == False:
+            return self.degree_of_disorder() / self.max_degree_of_disorder()
+        else:
+            return self.degree_of_disorder(True) / self.max_degree_of_disorder(True)
 
-    def max_degree_of_disorder(self) -> float:
+    def max_degree_of_disorder(self, use_interval=False) -> float:
         # To calculate the maximum degree of disorder for a table with n elements use the formula (n^2 -1)/2
-        verification_hit_dict = self.template_td_data_dict.calculate_key_hit_time()
-        n = len(list(verification_hit_dict.keys()))
-        return (pow(n, 2) - 1) / 2
+        if use_interval == False:
+            verification_hit_dict = self.template_td_data_dict.calculate_key_hold_time()
+            n = len(list(verification_hit_dict.keys()))
+            return (pow(n, 2) - 1) / 2
+        else:
+            verification_hit_dict = (
+                self.template_td_data_dict.calculate_key_interval_time()
+            )
+            n = len(list(verification_hit_dict.keys()))
+            return (pow(n, 2) - 1) / 2
 
-    def is_key_valid(self) -> bool:
+    def is_key_valid(self, use_interval=False) -> bool:
         # Maybe to see if typing samples are valid we compare the absolute degree of disorder with a given
         # threshold value and if it is less than the threshold the sample is considered valid
-        if self.absolute_degree_of_disorder() < self.THRESHOLD:
-            return True
+        if use_interval == False:
+            if self.absolute_degree_of_disorder() < self.THRESHOLD:
+                return True
+            else:
+                return False
         else:
-            return False
+            if self.absolute_degree_of_disorder(True) < self.THRESHOLD:
+                return True
+            else:
+                return False
 
-    def find_distance(self, entry) -> int:
+    def find_distance(self, entry, use_interval=False) -> int:
         # Finds the distance between a given entry from the template table and
         # the corresponding key letter entry in the verification table
         log = Logger()
-        template_hit_dict = self.template_td_data_dict.calculate_key_hit_time()
+        template_hit_dict = self.template_td_data_dict.calculate_key_hold_time()
         store = dictionary_sort_by_value(template_hit_dict)
         distance = 0
-        verification_keys = find_matching_keys(
-            self.template_file_path, self.verification_file_path
-        )
+        if use_interval == False:
+            verification_keys = find_matching_keys(
+                self.template_file_path, self.verification_file_path
+            )
+        else:
+            verification_keys = find_matching_interval_keys(
+                self.template_file_path, self.verification_file_path
+            )
         sorted_template_keys = list(store.keys())
 
         if not entry in sorted_template_keys:
@@ -125,12 +154,21 @@ class RelativeVerifier:
     def verification_path(self):
         return self.verification_file_path
 
-    def find_all_valid_keys(self):
+    def find_all_valid_keys(self, use_interval=False):
         valids = []
-        matches = find_matching_keys(
-            self.template_file_path, self.verification_file_path
-        )
-        for key in matches:
-            if self.is_key_valid():
-                valids.append(key)
-        print("Valids: ", valids)
+        if use_interval == False:
+            matches = find_matching_keys(
+                self.template_file_path, self.verification_file_path
+            )
+            for key in matches:
+                if self.is_key_valid():
+                    valids.append(key)
+            return valids
+        else:
+            matches = find_matching_interval_keys(
+                self.template_file_path, self.verification_file_path
+            )
+            for key in matches:
+                if self.is_key_valid(False):
+                    valids.append(key)
+            return valids

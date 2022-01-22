@@ -6,7 +6,7 @@ from verifiers.absolute_verifier import AbsoluteVerifier
 from utils import is_csv_file
 from verifiers.relative_verifier import RelativeVerifier
 from rich.traceback import install
-from verifiers.verifier_utils import find_matching_keys
+from verifiers.verifier_utils import find_matching_interval_keys
 
 install()
 
@@ -34,8 +34,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not is_csv_file(input_path) or not is_csv_file(other_path):
         sys.exit()
     data_dict = TD_Data_Dictionary(input_path)
-    # data_dict.calculate_key_hit_time
-    # data_dict.debug()
     # pairs = data_dict.get_key_pairs()
 
     # print(pairs)
@@ -46,8 +44,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # hits = data_dict.calculate_key_hit_time()
     comp_dict.calculate_key_hold_time()
     # print(find_matching_keys(input_path, other_path))
-    # r_verifier = RelativeVerifier(input_path, other_path, 2.0)
-    # r_verifier.find_all_valid_keys()
+    r_verifier = RelativeVerifier(input_path, other_path, 2.0)
+    # r_verifier.find_all_valid_keys(True)
+    matches = find_matching_interval_keys(input_path, other_path)
+    print(r_verifier.find_all_valid_keys())
 
 
 if __name__ == "__main__":
