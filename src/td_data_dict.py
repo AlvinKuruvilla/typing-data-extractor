@@ -145,7 +145,7 @@ class TD_Data_Dictionary:
                 final[x] = multi_avg
         for a, b in final.items():
             table.add_row([a, b])
-        print(table.get_string())
+        # print(table.get_string())
         return final
 
     # TODO: Maybe this should be in a table instead
