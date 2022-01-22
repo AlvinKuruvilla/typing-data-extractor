@@ -10,6 +10,9 @@ from typing import List
 import collections
 from prettytable import PrettyTable
 
+#! FIXME: The Shift key is not showing up in the KIT data for the relative_verifier
+#! DIXME: The Shift key is not showing up in the KIT or KHT data for the similarity verifier
+
 
 class TD_Data_Value:
     def __init__(self, elements: List[str]):
