@@ -7,7 +7,7 @@ from rich.traceback import install
 install()
 
 
-class NotCSVFileError(Exception):
+class NoCSVFileError(Exception):
     """Exception raised if provided path is not a csv file.
 
     Attributes:
@@ -126,7 +126,7 @@ class BBMASSConverter:
             update_action_column = conv.update_action_column(actions)
             return (keys, times, update_action_column)
         else:
-            raise NotCSVFileError(filename, filename + " is not a CSV file")
+            raise NoCSVFileError(filename, filename + " is not a CSV file")
 
 
 if __name__ == "__main__":
