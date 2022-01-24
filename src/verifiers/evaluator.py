@@ -1,11 +1,16 @@
 from verifiers.relative_verifier import RelativeVerifier
 from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.similarity_verifier import SimilarityVerifier
-from log import Logger
 from verifiers.verifier_utils import find_matching_keys, find_matching_interval_keys
 
 
-def _validate_verifier_type(verifier):
+class Invalid_Verifier(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
+def validate_verifier_type(verifier):
     if isinstance(verifier, RelativeVerifier):
         return True
     elif isinstance(verifier, AbsoluteVerifier):
@@ -18,12 +23,11 @@ def _validate_verifier_type(verifier):
 
 class Verifier_Evaluator:
     def __init__(self, verifier, threshold):
-        log = Logger()
-        if _validate_verifier_type(verifier):
+        if validate_verifier_type(verifier):
             self.verifier = verifier
             self.threshold = threshold
         else:
-            log.km_fatal("Provided verifier is not a valid type")
+            raise Invalid_Verifier("Provided verifier is not a valid type")
 
     def extract_features(self):
         kht_valids = self.verifier.find_all_valid_keys()
@@ -51,11 +55,10 @@ class Verifier_Evaluator:
         return self.verifier.verification_path()
 
     def switch_verifier(self, new_verifier):
-        log = Logger()
-        if _validate_verifier_type(new_verifier):
+        if validate_verifier_type(new_verifier):
             self.verifier = new_verifier
         else:
-            log.km_fatal("The provided verifier is not a valid verifier")
+            raise Invalid_Verifier("Provided verifier is not a valid type")
 
     def get_threshold(self):
         return self.threshold

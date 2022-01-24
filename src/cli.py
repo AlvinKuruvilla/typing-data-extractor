@@ -7,7 +7,7 @@ from utils import is_csv_file
 from verifiers.relative_verifier import RelativeVerifier
 from rich.traceback import install
 from verifiers.verifier_utils import find_matching_interval_keys
-from verifiers.evaluator import Verifier_Evaluator
+from verifiers.evaluator import Verifier_Evaluator, validate_verifier_type
 
 install()
 
@@ -48,8 +48,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     r_verifier = RelativeVerifier(input_path, other_path, 2.0)
     # r_verifier.find_all_valid_keys(True)
     matches = find_matching_interval_keys(input_path, other_path)
-    # print(r_verifier.find_all_valid_keys())
-    eval = Verifier_Evaluator(r_verifier, 0.50)
+    print(r_verifier.find_all_valid_keys())
+    eval = Verifier_Evaluator(z, 0.50)
     a, b = eval.extract_features()
     print("Hello ", *eval.evaluate(a, b))
 
