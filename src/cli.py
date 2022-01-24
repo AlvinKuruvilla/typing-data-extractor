@@ -49,7 +49,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # r_verifier.find_all_valid_keys(True)
     matches = find_matching_interval_keys(input_path, other_path)
     print(r_verifier.find_all_valid_keys())
-    eval = Verifier_Evaluator(z, 0.50)
+    eval = Verifier_Evaluator(r_verifier, 0.50)
     a, b = eval.extract_features()
     print("Hello ", *eval.evaluate(a, b))
 
