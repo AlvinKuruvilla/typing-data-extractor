@@ -49,3 +49,16 @@ class Verifier_Evaluator:
 
     def _get_verification_file_path(self):
         return self.verifier.verification_path()
+
+    def switch_verifier(self, new_verifier):
+        log = Logger()
+        if _validate_verifier_type(new_verifier):
+            self.verifier = new_verifier
+        else:
+            log.km_fatal("The provided verifier is not a valid verifier")
+
+    def get_threshold(self):
+        return self.threshold
+
+    def set_threshold(self, threshold):
+        self.threshold = threshold

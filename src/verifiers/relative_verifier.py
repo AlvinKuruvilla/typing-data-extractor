@@ -87,6 +87,9 @@ class RelativeVerifier:
         else:
             return self.degree_of_disorder(True) / self.max_degree_of_disorder(True)
 
+    def set_threshold(self, threshold):
+        self.threshold = threshold
+
     def max_degree_of_disorder(self, use_interval=False) -> float:
         # To calculate the maximum degree of disorder for a table with n elements use the formula (n^2 -1)/2
         if use_interval == False:
@@ -153,6 +156,9 @@ class RelativeVerifier:
 
     def verification_path(self):
         return self.verification_file_path
+
+    def get_threshold(self):
+        return self.threshold
 
     def find_all_valid_keys(self, use_interval=False):
         valids = []

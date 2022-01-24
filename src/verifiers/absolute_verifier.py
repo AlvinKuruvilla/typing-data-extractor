@@ -147,3 +147,9 @@ class AbsoluteVerifier:
                 # and thus, always fall in the inclusive range of (1, THRESHOLD) so we can automatically
                 # just return True
                 return True
+
+    def get_threshold(self):
+        return self.threshold
+
+    def set_threshold(self, threshold):
+        self.threshold = threshold

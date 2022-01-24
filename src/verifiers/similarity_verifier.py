@@ -20,6 +20,12 @@ class SimilarityVerifier:
     def template_path(self):
         return self.template_file_path
 
+    def set_threshold(self, threshold):
+        self.threshold = threshold
+
+    def get_threshold(self):
+        return self.threshold
+
     def verification_path(self):
         return self.verification_file_path
 
