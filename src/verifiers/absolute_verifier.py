@@ -1,3 +1,9 @@
+# Copyright 2020-2021, Alvin Kuruvilla <alvineasokuruvilla@gmail.com>
+
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
 from td_data_dict import TD_Data_Dictionary
 from .verifier_utils import find_matching_keys, is_between, find_matching_interval_keys
 from log import Logger

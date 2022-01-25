@@ -1,4 +1,8 @@
-# NOTE: Uses the KIHT value
+# Copyright 2022, Alvin Kuruvilla <alvineasokuruvilla@gmail.com>
+
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
 
 import statistics
 from log import Logger

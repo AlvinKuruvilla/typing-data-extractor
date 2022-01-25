@@ -1,3 +1,9 @@
+# Copyright 2020-2021, Alvin Kuruvilla <alvineasokuruvilla@gmail.com>
+
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
 from verifiers.relative_verifier import RelativeVerifier
 from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.similarity_verifier import SimilarityVerifier
