@@ -35,6 +35,14 @@ def check_gen_dir():
         os.mkdir(path)
 
 
+def strip_filename(filepath: str, keep_extension: bool = True):
+    filename = os.path.basename(filepath)
+    if keep_extension:
+        return filename
+    else:
+        return os.path.splitext(filepath)[0]
+
+
 def is_csv_file(path: str):
     is_file = os.path.isfile(os.path.join(os.getcwd(), "testdata", "bbmass", path))
     if is_file:
@@ -130,7 +138,11 @@ class BBMASSConverter:
             times = conv.save_time_column(filename)
             actions = conv.save_action_column(filename)
             update_action_column = conv.update_action_column(actions)
-            return (keys, times, update_action_column)
+            return (
+                keys,
+                update_action_column,
+                times,
+            )
         else:
             raise NoCSVFileError(filename, filename + " is not a CSV file")
 
@@ -139,6 +151,7 @@ if __name__ == "__main__":
     check_gen_dir()
     conv = BBMASSConverter("bbmass")
     dir_path = os.path.join(os.getcwd(), "testdata", conv.get_bbmass_directory_path())
+
     for filename in os.listdir(dir_path):
         if is_csv_file(filename):
             # print(filename)
