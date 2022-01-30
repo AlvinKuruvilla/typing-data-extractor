@@ -16,9 +16,6 @@ from typing import List
 import collections
 from prettytable import PrettyTable
 
-#! FIXME: The Shift key is not showing up in the KIT data for the relative_verifier
-#! DIXME: The Shift key is not showing up in the KIT or KHT data for the similarity verifier
-
 
 class TD_Data_Value:
     def __init__(self, elements: List[str]):
@@ -47,8 +44,7 @@ class TD_Data_Dictionary:
         with open(self.csv_data_path, "r") as file:
             reader = csv.reader(file)
             # Skip the header and move the reader forward to next line
-            _ = next(reader)
-            _ = next(reader)
+            next(reader)
             for i, line in enumerate(reader):
                 self.data_dict[TD_Data_Key(line[1])] = TD_Data_Value([line[0], line[2]])
             #     print("line[{}] = {}".format(i, line))
@@ -128,10 +124,12 @@ class TD_Data_Dictionary:
         # pretty_print(res)
         for x, y in res.items():
             if len(y) == 2:
+                # print("Index: ", x)
                 floats = [float(item) for item in y]
                 subtr = floats[1] - floats[0]
                 final[x] = subtr
             elif len(y) % 2 == 0 and len(y) != 2:
+                print("Index: ", x)
                 subtraction_holder = []
                 multi_floats = [float(item) for item in y]
                 multi_diff = chunks(multi_floats, 2)
