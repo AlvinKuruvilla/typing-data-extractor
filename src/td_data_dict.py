@@ -129,7 +129,6 @@ class TD_Data_Dictionary:
                 subtr = floats[1] - floats[0]
                 final[x] = subtr
             elif len(y) % 2 == 0 and len(y) != 2:
-                print("Index: ", x)
                 subtraction_holder = []
                 multi_floats = [float(item) for item in y]
                 multi_diff = chunks(multi_floats, 2)

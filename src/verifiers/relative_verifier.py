@@ -171,6 +171,7 @@ class RelativeVerifier:
             matches = find_matching_keys(
                 self.template_file_path, self.verification_file_path
             )
+
             for key in matches:
                 if self.is_key_valid():
                     valids.append(key)
