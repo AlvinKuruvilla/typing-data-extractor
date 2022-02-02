@@ -41,8 +41,8 @@ class Verifier_Evaluator:
         return (kht_valids, kit_valids)
 
     def evaluate(self, kht_valids, kit_valids):
-        t_path = self._get_template_file_path()
-        v_path = self._get_verification_file_path()
+        t_path = self.get_template_file_path()
+        v_path = self.get_verification_file_path()
         total_kht = find_matching_keys(t_path, v_path)
         total_kit = find_matching_interval_keys(t_path, v_path)
         # Now that we have the number of actual matches and the number of total potential matches
@@ -54,10 +54,10 @@ class Verifier_Evaluator:
         else:
             return tuple("False")
 
-    def _get_template_file_path(self):
+    def get_template_file_path(self):
         return self.verifier.template_path()
 
-    def _get_verification_file_path(self):
+    def get_verification_file_path(self):
         return self.verifier.verification_path()
 
     def switch_verifier(self, new_verifier):
