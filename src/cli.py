@@ -8,7 +8,7 @@
 import argparse
 import sys
 from typing import Optional, Sequence
-from td_data_dict import TD_Data_Dictionary
+from td_data_dict import TD_Data_Dictionary, make_dataframe
 from verifiers.absolute_verifier import AbsoluteVerifier
 from utils import is_csv_file
 from verifiers.similarity_verifier import SimilarityVerifier
@@ -54,10 +54,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     r_verifier.find_all_valid_keys()
     matches = find_matching_interval_keys(input_path, other_path)
     # print(r_verifier.find_all_valid_keys())
-    print(matches)
+    # print(matches)
     # eval = Verifier_Evaluator(r_verifier, 0.50)
     # a, b = eval.extract_features()
     # print("Hello ", *eval.evaluate(a, b))
+    make_dataframe(data_dict)
 
 
 if __name__ == "__main__":

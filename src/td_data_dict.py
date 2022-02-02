@@ -15,6 +15,7 @@ import csv
 from typing import List
 import collections
 from prettytable import PrettyTable
+import pandas as pd
 
 
 class TD_Data_Value:
@@ -219,3 +220,33 @@ class TD_Data_Dictionary:
 
     def path(self):
         return self.csv_data_path
+
+
+def make_keys_dataframe(data: TD_Data_Dictionary):
+    keys = []
+    for k, _ in data.data().items():
+        keys.append(k.get_key_name())
+    r = {"Keys": keys}
+    return pd.DataFrame.from_dict(r)
+
+
+def make_actions_dataframe(data: TD_Data_Dictionary):
+    actions = []
+    for _, v in data.data().items():
+        actions.append(v.get_action())
+    r = {"Actions": actions}
+    return pd.DataFrame.from_dict(r)
+
+
+def make_times_dataframe(data: TD_Data_Dictionary):
+    t = data.times()
+    r = {"Times": t}
+    return pd.DataFrame.from_dict(r)
+
+
+def make_dataframe(data: TD_Data_Dictionary):
+    keys_dict = make_keys_dataframe(data)
+    times_dict = make_times_dataframe(data)
+    action_dict = make_actions_dataframe(data)
+    df = pd.concat([action_dict, keys_dict, times_dict], axis=1)
+    print(df)
