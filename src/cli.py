@@ -4,18 +4,25 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-
+#! FIXME: When running the CLI using two bbmass generated data files execution takes exceedingly long (11+ minutes at minimum)
 import argparse
 import sys
 from typing import Optional, Sequence
 from td_data_dict import TD_Data_Dictionary, make_dataframe
 from verifiers.absolute_verifier import AbsoluteVerifier
 from utils import is_csv_file
+from verifiers.reporter import DataReporter
 from verifiers.similarity_verifier import SimilarityVerifier
 from verifiers.relative_verifier import RelativeVerifier
 from rich.traceback import install
-from verifiers.verifier_utils import find_matching_interval_keys
+from verifiers.verifier_utils import (
+    find_matching_interval_keys,
+    dataframe_from_list,
+    find_matching_keys,
+)
 from verifiers.evaluator import Verifier_Evaluator, validate_verifier_type
+import datapane as dp
+import os
 
 install()
 
@@ -52,13 +59,25 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # print(find_matching_keys(input_path, other_path))
     r_verifier = AbsoluteVerifier(input_path, other_path, 2.0)
     r_verifier.find_all_valid_keys()
-    matches = find_matching_interval_keys(input_path, other_path)
+    interval_matches = find_matching_interval_keys(input_path, other_path)
+    regular_matches = find_matching_keys(input_path, other_path)
     # print(r_verifier.find_all_valid_keys())
     # print(matches)
     # eval = Verifier_Evaluator(r_verifier, 0.50)
     # a, b = eval.extract_features()
     # print("Hello ", *eval.evaluate(a, b))
-    make_dataframe(data_dict)
+    reporter = DataReporter()
+    template_df = make_dataframe(data_dict)
+    verification_df = make_dataframe(comp_dict)
+    report = dp.Report(
+        dp.DataTable(template_df, caption=f"Template Data"),
+        dp.DataTable(verification_df, caption=f"Verification Data"),
+        dp.DataTable(
+            dataframe_from_list(regular_matches, ["Keys"]),
+            caption="Matching Interval Keys",
+        ),
+    )
+    report.save(path=os.path.join(reporter.get_report_path(), "test.html"), open=True)
 
 
 if __name__ == "__main__":

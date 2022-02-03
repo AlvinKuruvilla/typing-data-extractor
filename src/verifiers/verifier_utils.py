@@ -5,6 +5,8 @@
 # https://opensource.org/licenses/MIT.
 
 from td_data_dict import TD_Data_Dictionary
+import pandas as pd
+from typing import List
 
 
 def find_matching_keys(template_file_path: str, verification_file_path: str) -> list:
@@ -28,6 +30,8 @@ def is_between(comp, start, end):
         return False
 
 
+#! TODO: When creating a dataframe the list generated from this function dataframe_from_list(), expects a list
+#! with 2 elements for column names when it should only need a single column
 def find_matching_interval_keys(
     template_file_path: str, verification_file_path: str
 ) -> list:
@@ -46,3 +50,8 @@ def find_matching_interval_keys(
         if key in verification_keys:
             matches.append(key)
     return matches
+
+
+def dataframe_from_list(data: list, column_name: List[str]):
+    df = pd.DataFrame(data, columns=column_name)
+    return df
