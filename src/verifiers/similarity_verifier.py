@@ -82,3 +82,4 @@ class SimilarityVerifier:
             if self.is_key_valid(key):
                 valids.append(key)
         print("Valids: ", valids)
+        return valids
