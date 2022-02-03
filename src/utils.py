@@ -6,6 +6,7 @@
 
 import os
 from log import Logger
+from typing import List
 
 
 def is_csv_file(path: str):
@@ -68,4 +69,12 @@ def is_float(n: str):
         float(n)
         return True
     except ValueError:
+        return False
+
+
+def verify_file_exists(filename: str, extensions: List[str]):
+    filename, file_extension = os.path.splitext(filename)
+    if file_extension in extensions:
+        return True
+    else:
         return False
