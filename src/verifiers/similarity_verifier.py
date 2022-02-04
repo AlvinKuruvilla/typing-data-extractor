@@ -11,15 +11,15 @@ from td_data_dict import TD_Data_Dictionary
 
 
 class SimilarityVerifier:
-    def __init__(
-        self,
-        template_file_path: str,
-        verification_file_path: str,
-    ):
+    def __init__(self, template_file_path: str, verification_file_path: str, threshold):
         self.template_file_path = template_file_path
         self.verification_file_path = verification_file_path
         self.template_td_data_dict = TD_Data_Dictionary(self.template_file_path)
         self.verification_td_data_dict = TD_Data_Dictionary(self.verification_file_path)
+        self.THRESHOLD = threshold
+
+    def class_name(self) -> str:
+        return "Similarity Verifier"
 
     def template_path(self):
         return self.template_file_path
@@ -28,7 +28,7 @@ class SimilarityVerifier:
         self.threshold = threshold
 
     def get_threshold(self):
-        return self.threshold
+        return self.THRESHOLD
 
     def verification_path(self):
         return self.verification_file_path
@@ -40,12 +40,12 @@ class SimilarityVerifier:
     def find_latency_averages(self, key: str):
         log = Logger()
         # NOTE: This function does not actually calculate the average latency
-        # for the key, rather it perform a lookup on the dictionary returned by calculate_key_hit_time()
+        # for the key, rather it perform a lookup on the dictionary returned by calculate_key_hold_time()
         # function for both of the td_data_dict's.
         # This is because the returned KHT dictionary already performs a mean operation if there are
         # multiple latencies for a particular key
-        template_hit_dict = self.template_td_data_dict.calculate_key_hit_time()
-        verification_hit_dict = self.verification_td_data_dict.calculate_key_hit_time()
+        template_hit_dict = self.template_td_data_dict.calculate_key_hold_time()
+        verification_hit_dict = self.verification_td_data_dict.calculate_key_hold_time()
         key_matches = find_matching_keys(
             self.template_file_path, self.verification_file_path
         )
@@ -68,7 +68,7 @@ class SimilarityVerifier:
         assert len(latencies) == 2
         sdev = self.calculate_standard_deviation(latencies)
         # print("The standard deviation is: ", sdev)
-        if sdev <= 1:
+        if sdev <= self.THRESHOLD:
             return True
         else:
             return False
