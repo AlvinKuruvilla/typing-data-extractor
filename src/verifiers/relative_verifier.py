@@ -42,6 +42,9 @@ class RelativeVerifier:
         self.template_td_data_dict = TD_Data_Dictionary(self.template_file_path)
         self.verification_td_data_dict = TD_Data_Dictionary(self.verification_file_path)
 
+    def class_name(self) -> str:
+        return "Relative Verifier"
+
     def degree_of_disorder(self, use_interval=False) -> int:
         # The algorithm to find degree of disorder is as follows:
         # So let's say we have the two tables listed below
@@ -93,7 +96,7 @@ class RelativeVerifier:
             return self.degree_of_disorder(True) / self.max_degree_of_disorder(True)
 
     def set_threshold(self, threshold):
-        self.threshold = threshold
+        self.THRESHOLD = threshold
 
     def max_degree_of_disorder(self, use_interval=False) -> float:
         # To calculate the maximum degree of disorder for a table with n elements use the formula (n^2 -1)/2
@@ -163,7 +166,7 @@ class RelativeVerifier:
         return self.verification_file_path
 
     def get_threshold(self):
-        return self.threshold
+        return self.THRESHOLD
 
     def find_all_valid_keys(self, use_interval=False):
         valids = []
@@ -173,7 +176,7 @@ class RelativeVerifier:
             )
 
             for key in matches:
-                if self.is_key_valid():
+                if self.is_key_valid(False):
                     valids.append(key)
             return valids
         else:
@@ -181,6 +184,25 @@ class RelativeVerifier:
                 self.template_file_path, self.verification_file_path
             )
             for key in matches:
-                if self.is_key_valid(False):
+                if self.is_key_valid():
                     valids.append(key)
             return valids
+
+    #!FIXME: The values are all the same, but the idea is there
+    def get_valid_keys_data(self, use_interval=False):
+        data = {}
+        if use_interval == False:
+            matches = find_matching_keys(
+                self.template_file_path, self.verification_file_path
+            )
+            for key in matches:
+                if self.absolute_degree_of_disorder() < self.THRESHOLD:
+                    data[key] = self.absolute_degree_of_disorder()
+        else:
+            matches = find_matching_interval_keys(
+                self.template_file_path, self.verification_file_path
+            )
+            for key in matches:
+                if self.absolute_degree_of_disorder(True) < self.THRESHOLD:
+                    data[key] = self.absolute_degree_of_disorder(True)
+        return data

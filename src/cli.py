@@ -19,10 +19,13 @@ from verifiers.verifier_utils import (
     find_matching_interval_keys,
     dataframe_from_list,
     find_matching_keys,
+    compress_interval,
 )
 from verifiers.evaluator import Verifier_Evaluator, validate_verifier_type
 import datapane as dp
 import os
+import pandas as pd
+import matplotlib.pyplot as plt
 
 install()
 
@@ -57,7 +60,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # data_dict.calculate_key_hold_time()
 
     # print(find_matching_keys(input_path, other_path))
-    r_verifier = AbsoluteVerifier(input_path, other_path, 2.0)
+    r_verifier = RelativeVerifier(input_path, other_path, 1.0)
+    threshold = pd.DataFrame([{"Threshold": r_verifier.get_threshold()}])
     r_verifier.find_all_valid_keys()
     interval_matches = find_matching_interval_keys(input_path, other_path)
     regular_matches = find_matching_keys(input_path, other_path)
@@ -69,13 +73,29 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     reporter = DataReporter()
     template_df = make_dataframe(data_dict)
     verification_df = make_dataframe(comp_dict)
+    source = r_verifier.get_valid_keys_data()
+    print("Source:", source)
+    plot_keys = list(source.keys())
+    plot_values = list(source.values())
+    keys_df = dataframe_from_list(plot_keys, ["Keys"])
+    values_df = dataframe_from_list(plot_values, ["Times"])
+    df = pd.concat([keys_df, values_df], axis=1)
+    # print(df)
+    ax = df.plot.bar(x="Keys", y="Times", rot=0)
+    # print(ax)
+
     report = dp.Report(
         dp.DataTable(template_df, caption=f"Template Data"),
         dp.DataTable(verification_df, caption=f"Verification Data"),
         dp.DataTable(
             dataframe_from_list(regular_matches, ["Keys"]),
+            caption="Matching Keys",
+        ),
+        dp.DataTable(
+            dataframe_from_list(compress_interval(interval_matches), ["Keys"]),
             caption="Matching Interval Keys",
         ),
+        dp.Plot(ax),
     )
     report.save(path=os.path.join(reporter.get_report_path(), "test.html"), open=True)
 
