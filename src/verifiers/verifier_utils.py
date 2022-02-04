@@ -30,8 +30,6 @@ def is_between(comp, start, end):
         return False
 
 
-#! TODO: When creating a dataframe the list generated from this function dataframe_from_list(), expects a list
-#! with 2 elements for column names when it should only need a single column
 def find_matching_interval_keys(
     template_file_path: str, verification_file_path: str
 ) -> list:
@@ -55,3 +53,13 @@ def find_matching_interval_keys(
 def dataframe_from_list(data: list, column_name: List[str]):
     df = pd.DataFrame(data, columns=column_name)
     return df
+
+
+def compress_interval(intervals_list: List[List[str]]):
+    compress = []
+    for element in intervals_list:
+        assert len(element) == 2
+        for i in element:
+            if not i in compress:
+                compress.append(i)
+    return compress
