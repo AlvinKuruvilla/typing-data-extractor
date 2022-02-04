@@ -19,6 +19,9 @@ class AbsoluteVerifier:
         self.template_td_data_dict = TD_Data_Dictionary(self.template_file_path)
         self.verification_td_data_dict = TD_Data_Dictionary(self.verification_file_path)
 
+    def class_name() -> str:
+        return "Absolute Verifier"
+
     def template_path(self):
         return self.template_file_path
 
