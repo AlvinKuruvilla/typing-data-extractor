@@ -9,7 +9,7 @@ from log import Logger
 from .verifier_utils import find_matching_keys
 from td_data_dict import TD_Data_Dictionary
 
-
+# TODO: Add interval_key support
 class SimilarityVerifier:
     def __init__(self, template_file_path: str, verification_file_path: str, threshold):
         self.template_file_path = template_file_path
