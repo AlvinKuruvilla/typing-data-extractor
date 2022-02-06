@@ -184,11 +184,12 @@ class RelativeVerifier:
                 self.template_file_path, self.verification_file_path
             )
             for key in matches:
-                if self.is_key_valid():
+                if self.is_key_valid(True):
                     valids.append(key)
             return valids
 
-    #!FIXME: The values are all the same, but the idea is there
+    # NOTE: We don't _have_ to do the loop because self.absolute_degree_of_disorder() operates on the whole table
+    # anyway. So it is okay that each key has the same timing value from the verifiers perspective
     def get_valid_keys_data(self, use_interval=False):
         data = {}
         if use_interval == False:
