@@ -9,10 +9,12 @@ import argparse
 import sys
 from typing import Optional, Sequence
 from td_data_dict import TD_Data_Dictionary, make_dataframe
-from verifiers.absolute_verifier import AbsoluteVerifier
+
+# from verifiers.absolute_verifier import AbsoluteVerifier
 from utils import is_csv_file
 from verifiers.reporter import DataReporter
-from verifiers.similarity_verifier import SimilarityVerifier
+
+# from verifiers.similarity_verifier import SimilarityVerifier
 from verifiers.relative_verifier import RelativeVerifier
 from rich.traceback import install
 from verifiers.verifier_utils import (
@@ -21,11 +23,13 @@ from verifiers.verifier_utils import (
     find_matching_keys,
     compress_interval,
 )
-from verifiers.evaluator import Verifier_Evaluator, validate_verifier_type
+
+# from verifiers.evaluator import Verifier_Evaluator, validate_verifier_type
 import datapane as dp
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
+
+# import matplotlib.pyplot as plt
 
 install()
 

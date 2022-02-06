@@ -128,7 +128,7 @@ class RelativeVerifier:
     def find_distance(self, entry, use_interval=False) -> int:
         # Finds the distance between a given entry from the template table and
         # the corresponding key letter entry in the verification table
-        log = Logger()
+        log = Logger("find_distance")
         template_hit_dict = self.template_td_data_dict.calculate_key_hold_time()
         store = dictionary_sort_by_value(template_hit_dict)
         distance = 0

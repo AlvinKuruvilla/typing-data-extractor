@@ -38,7 +38,7 @@ class SimilarityVerifier:
         return sdev
 
     def find_latency_averages(self, key: str):
-        log = Logger()
+        log = Logger("similarity_find_latency_averages")
         # NOTE: This function does not actually calculate the average latency
         # for the key, rather it perform a lookup on the dictionary returned by calculate_key_hold_time()
         # function for both of the td_data_dict's.

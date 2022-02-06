@@ -4,39 +4,41 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from loguru import logger
-import sys
-from functools import partialmethod
+# Check this link for more details: https://stackoverflow.com/a/23964880
+from colorlog import ColoredFormatter
+import logging
 
 
 class Logger:
     """A wrapper around python's native logging module to allow for prettier and more expressive logging output"""
 
-    def __init__(self) -> None:
-        format = "<level>{level: <8}</level> | <level>{message}</level>"
-        logger.remove()
-        logger.add(sys.stderr, format=format)
+    def __init__(self, name) -> None:
+        LOG_LEVEL = logging.DEBUG
+        LOGFORMAT = (
+            "%(log_color)s%(levelname)-4s%(reset)s | %(log_color)s%(message)s%(reset)s"
+        )
+        logging.root.setLevel(LOG_LEVEL)
+        formatter = ColoredFormatter(LOGFORMAT)
+        stream = logging.StreamHandler()
+        stream.setLevel(LOG_LEVEL)
+        stream.setFormatter(formatter)
+        self.log = logging.getLogger(name)
+        self.log.propagate = False
+        self.log.setLevel(LOG_LEVEL)
+        self.log.addHandler(stream)
 
     def km_info(self, msg: str) -> None:
         """Displays a information level message to the user"""
-        logger.info(msg)
+        self.log.info(msg)
 
     def km_warn(self, msg: str) -> None:
         """Displays a warning level message to the user"""
-        logger.warning(msg)
+        self.log.warn(msg)
 
     def km_error(self, msg: str) -> None:
         """Displays an error level message to the user"""
-        logger.error(msg)
+        self.log.error(msg)
 
     def km_fatal(self, msg: str) -> None:
         """Displays a fatal level message to the user"""
-        logger.level("FATAL", no=33, color="<fg #FFA500>")
-        logger.__class__.km_fatal = partialmethod(logger.__class__.log, "FATAL")
-        logger.km_fatal(msg)
-
-    def km_custom(self, msg: str, markup_tag: str, heading: str = "CUSTOM") -> None:
-        """Display messages simply in red"""
-        logger.level(heading, no=34, color=markup_tag)
-        logger.__class__.km_custom = partialmethod(logger.__class__.log, heading)
-        logger.km_custom(msg)
+        self.log.critical(msg)

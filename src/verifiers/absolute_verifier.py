@@ -53,7 +53,7 @@ class AbsoluteVerifier:
             return 1 - (len(valids) / len(matches))
 
     def find_latency_averages(self, key: str, use_interval=False):
-        log = Logger()
+        log = Logger("find_latency_averages")
         if use_interval == False:
             # NOTE: This function does not actually calculate the average latency
             # for the key, rather it perform a lookup on the dictionary returned by calculate_key_hit_time()
