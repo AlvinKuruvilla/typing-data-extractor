@@ -61,7 +61,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     # print(find_matching_keys(input_path, other_path))
     r_verifier = RelativeVerifier(input_path, other_path, 1.0)
-    threshold = pd.DataFrame([{"Threshold": r_verifier.get_threshold()}])
     r_verifier.find_all_valid_keys()
     interval_matches = find_matching_interval_keys(input_path, other_path)
     regular_matches = find_matching_keys(input_path, other_path)
@@ -95,7 +94,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             dataframe_from_list(compress_interval(interval_matches), ["Keys"]),
             caption="Matching Interval Keys",
         ),
-        dp.Plot(ax),
+        dp.Plot(ax, caption=r_verifier.class_name()),
     )
     report.save(path=os.path.join(reporter.get_report_path(), "test.html"), open=True)
 
