@@ -9,3 +9,4 @@ testdata
 *.png
 *.pstats
 reports
+*.profile
