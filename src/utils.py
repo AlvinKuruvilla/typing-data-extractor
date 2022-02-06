@@ -10,17 +10,17 @@ from typing import List
 
 
 def is_csv_file(path: str):
-    log = Logger()
+    # log = Logger()
     is_file = os.path.isfile(path)
     if is_file:
         # Now check that the extension is CSV
         if path.lower().endswith(".csv"):
             return True
         else:
-            log.km_fatal(path + ", is not a csv file")
+            # log.km_fatal(path + ", is not a csv file")
             return False
     else:
-        log.km_fatal(path + " , is not a file")
+        # log.km_fatal(path + " , is not a file")
         return False
 
 
