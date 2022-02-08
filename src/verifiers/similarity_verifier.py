@@ -83,3 +83,6 @@ class SimilarityVerifier:
                 valids.append(key)
         print("Valids: ", valids)
         return valids
+
+    def count_valid_key_matches(self):
+        return len(self.find_all_valid_keys())

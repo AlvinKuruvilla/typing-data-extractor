@@ -162,3 +162,6 @@ class AbsoluteVerifier:
 
     def set_threshold(self, threshold):
         self.threshold = threshold
+
+    def count_valid_key_matches(self):
+        return len(self.find_all_valid_keys())
