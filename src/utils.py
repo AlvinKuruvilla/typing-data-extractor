@@ -7,6 +7,7 @@
 import os
 from log import Logger
 from typing import List
+from numpy import mean
 
 
 def is_csv_file(path: str):
@@ -57,11 +58,7 @@ def m_average(*args):
 
 def running_avg(lst):
     """Calculate a running average of a list"""
-    avg = 0
-    l = len(lst)
-    for element in lst:
-        avg += element
-    return avg / l
+    return mean(lst)
 
 
 def is_float(n: str):
