@@ -8,7 +8,8 @@ from td_data_dict import TD_Data_Dictionary
 import pandas as pd
 from typing import List
 
-
+#! I think this is the origin of the bad performance as a whole. We need to figure out a way to improve this function and the calculate_key_hold_time since that is the function be called inside of it
+#! Perhaps we can look into caching the result of calculate_key_hold_time
 def find_matching_keys(template_file_path: str, verification_file_path: str) -> list:
     matches = []
     template_dict = TD_Data_Dictionary(template_file_path)
@@ -63,3 +64,13 @@ def compress_interval(intervals_list: List[List[str]]):
             if not i in compress:
                 compress.append(i)
     return compress
+
+
+def count_key_matches(template_file_path: str, verification_file_path: str) -> int:
+    return len(find_matching_keys(template_file_path, verification_file_path))
+
+
+def count_interval_key_matches(
+    template_file_path: str, verification_file_path: str
+) -> int:
+    return len(find_matching_interval_keys(template_file_path, verification_file_path))
