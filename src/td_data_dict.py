@@ -104,8 +104,6 @@ class TD_Data_Dictionary:
         keys = self.get_unique_keys()
         store = collections.defaultdict(list)
         final = collections.defaultdict(float)
-        table = PrettyTable()
-        table.field_names = ["Key", "Hold Time"]
         res = collections.defaultdict(list)
         for key in keys:
             for i, j in self.data_dict.items():
@@ -122,7 +120,6 @@ class TD_Data_Dictionary:
             # has a multiple of 2 number of entries we have to split the array
             # into groups of 2 elements, find the difference between the groups
             # and finally average their differences together
-        # pretty_print(res)
         for x, y in res.items():
             if len(y) == 2:
                 # print("Index: ", x)
@@ -147,9 +144,6 @@ class TD_Data_Dictionary:
                     subtraction_holder.append(pair_subtract(diff))
                 multi_avg = running_avg(subtraction_holder)
                 final[x] = multi_avg
-        for a, b in final.items():
-            table.add_row([a, b])
-        # print(table.get_string())
         return final
 
     # TODO: Maybe this should be in a table instead
