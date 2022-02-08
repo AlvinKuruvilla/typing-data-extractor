@@ -9,6 +9,7 @@ import csv
 import pandas as pd
 from pathlib import Path
 from rich.traceback import install
+from utils import is_csv_file
 
 install()
 
@@ -41,19 +42,6 @@ def strip_filename(filepath: str, keep_extension: bool = True):
         return filename
     else:
         return os.path.splitext(filepath)[0]
-
-
-def is_csv_file(path: str):
-    is_file = os.path.isfile(os.path.join(os.getcwd(), "testdata", "bbmass", path))
-    if is_file:
-
-        # Now check that the extension is CSV
-        if path.lower().endswith(".csv"):
-            return True
-        else:
-            return False
-    else:
-        return False
 
 
 class BBMASSConverter:
