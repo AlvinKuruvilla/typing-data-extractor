@@ -165,3 +165,6 @@ class AbsoluteVerifier:
 
     def count_valid_key_matches(self):
         return len(self.find_all_valid_keys())
+
+    def count_valid_interval_key_matches(self):
+        return len(self.find_all_valid_keys(True))
