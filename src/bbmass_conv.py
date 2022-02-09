@@ -36,14 +36,6 @@ def check_gen_dir():
         os.mkdir(path)
 
 
-def strip_filename(filepath: str, keep_extension: bool = True):
-    filename = os.path.basename(filepath)
-    if keep_extension:
-        return filename
-    else:
-        return os.path.splitext(filepath)[0]
-
-
 class BBMASSConverter:
     def __init__(self, bbmass_dir_path: str):
         """

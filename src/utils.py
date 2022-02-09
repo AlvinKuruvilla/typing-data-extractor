@@ -75,3 +75,11 @@ def verify_file_exists(filename: str, extensions: List[str]):
         return True
     else:
         return False
+
+
+def strip_filename(filepath: str, keep_extension: bool = True):
+    filename = os.path.basename(filepath)
+    if keep_extension:
+        return filename
+    else:
+        return os.path.splitext(filepath)[0]
