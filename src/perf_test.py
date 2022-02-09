@@ -5,6 +5,7 @@ from td_data_dict import TD_Data_Dictionary
 from rich.traceback import install
 from utils import is_csv_file
 from verifiers.absolute_verifier import AbsoluteVerifier
+from verifiers.evaluator import evaluate_against_file
 
 install()
 
@@ -37,7 +38,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     r_verifier = AbsoluteVerifier(input_path, other_path, 1.0)
     # r_verifier.find_all_valid_keys()
     data_dict = TD_Data_Dictionary(input_path)
-    pairs = data_dict.get_key_pairs()
+    verifier = AbsoluteVerifier(input_path, other_path, 2.0)
+    print(evaluate_against_file(input_path, other_path, verifier))
 
 
 if __name__ == "__main__":
