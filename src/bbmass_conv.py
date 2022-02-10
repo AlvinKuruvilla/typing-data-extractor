@@ -9,23 +9,10 @@ import csv
 import pandas as pd
 from pathlib import Path
 from rich.traceback import install
+from exceptions import NotCSVFileError
 from utils import is_csv_file
 
 install()
-
-
-class NotCSVFileError(Exception):
-    """Exception raised if provided path is not a csv file.
-
-    Attributes:
-        path -- input path which caused the error
-        message -- explanation of the error
-    """
-
-    def __init__(self, path, message):
-        self.path = path
-        self.message = message
-        super().__init__(self.message)
 
 
 def check_gen_dir():

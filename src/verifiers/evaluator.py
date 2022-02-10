@@ -5,18 +5,13 @@
 # https://opensource.org/licenses/MIT.
 
 from bbmass_conv import NotCSVFileError
+from exceptions import Invalid_Verifier
 from utils import is_csv_file
 from verifiers.relative_verifier import RelativeVerifier
 from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.similarity_verifier import SimilarityVerifier
 from verifiers.verifier_utils import *
 import os
-
-
-class Invalid_Verifier(Exception):
-    def __init__(self, message):
-        self.message = message
-        super().__init__(self.message)
 
 
 def evaluate_against_file(template_path, other_filepath, verifier, use_interval=False):
