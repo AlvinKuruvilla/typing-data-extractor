@@ -4,6 +4,7 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
+from unittest import removeResult
 from utils import (
     is_csv_file,
     pair_subtract,
@@ -16,6 +17,14 @@ from typing import List
 import collections
 from prettytable import PrettyTable
 import pandas as pd
+from enum import Enum
+
+
+class KIT_Type(Enum):
+    Press_Press = 1
+    Press_Release = 2
+    Release_Press = 3
+    Release_Release = 4
 
 
 class TD_Data_Value:
@@ -146,7 +155,6 @@ class TD_Data_Dictionary:
                 final[x] = multi_avg
         return final
 
-    # TODO: Maybe this should be in a table instead
     def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
         store = {}
         for key_set in nested_key_list:
@@ -158,7 +166,42 @@ class TD_Data_Dictionary:
             ]
         return store
 
+    def make_kht_dictionary(self):
+        # NOTE: This function will not calculate the average of multiple times.
+        # Instead we will just store duplicate time entries in a list of values
+        keys = self.get_unique_keys()
+        res = {}
+        for key in keys:
+            res[key] = self.get_all_times_for_key(key)
+        return res
+
+    def make_kit_dictionary(self, keyset: List[str], kit_type: KIT_Type):
+        # NOTE: This function will not calculate the average of multiple times.
+        # Instead we will just store duplicate time entries in a list of values
+        assert len(keyset) == 2
+        res = {}
+        if kit_type == KIT_Type.Press_Press:
+            res[tuple(keyset)] = [self.get_press_press_time(keyset)]
+            return res
+        elif kit_type == KIT_Type.Press_Release:
+            res[tuple(keyset)] = [self.get_press_release_time(keyset)]
+            return res
+        elif kit_type == KIT_Type.Release_Press:
+            res[tuple(keyset)] = [self.get_release_press_time(keyset)]
+            return res
+        elif kit_type == KIT_Type.Release_Release:
+            res[tuple(keyset)] = [self.get_release_release_time(keyset)]
+            return res
+
+    def get_all_times_for_key(self, key: str):
+        result = []
+        for k, v in self.data().items():
+            if k.get_key_name() == key:
+                result.append(float(v.get_time()))
+        return result
+
     def get_press_times_for_key(self, key: str):
+        # TODO: Remove this stipulation
         # NOTE: This function requires that the 'key' parameter is of the form: "'key'"
         # So for example, data_dict.get_press_times_for_key("'H'")
         result = []
@@ -168,6 +211,7 @@ class TD_Data_Dictionary:
         return result
 
     def get_release_times_for_key(self, key: str):
+        # TODO: Remove this stipulation
         # NOTE: This function requires that the 'key' parameter is of the form: "'key'"
         # So for example, data_dict.get_release_times_for_key("'H'")
         result = []

@@ -1,7 +1,7 @@
 import argparse
 import sys
 from typing import Optional, Sequence
-from td_data_dict import TD_Data_Dictionary
+from td_data_dict import TD_Data_Dictionary, KIT_Type
 from rich.traceback import install
 from utils import is_csv_file
 from verifiers.absolute_verifier import AbsoluteVerifier
@@ -40,6 +40,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     data_dict = TD_Data_Dictionary(input_path)
     verifier = AbsoluteVerifier(input_path, other_path, 2.0)
     print(evaluate_against_file(input_path, other_path, verifier))
+    print(data_dict.make_kht_dictionary())
+    print(KIT_Type.Press_Press is KIT_Type.Press_Release)
 
 
 if __name__ == "__main__":
