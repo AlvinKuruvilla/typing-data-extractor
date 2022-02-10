@@ -4,16 +4,67 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
+from bbmass_conv import NotCSVFileError
+from utils import is_csv_file
 from verifiers.relative_verifier import RelativeVerifier
 from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.similarity_verifier import SimilarityVerifier
-from verifiers.verifier_utils import find_matching_keys, find_matching_interval_keys
+from verifiers.verifier_utils import *
+import os
 
 
 class Invalid_Verifier(Exception):
     def __init__(self, message):
         self.message = message
         super().__init__(self.message)
+
+
+def evaluate_against_file(template_path, other_filepath, verifier, use_interval=False):
+    if not is_csv_file(template_path):
+        raise NotCSVFileError(template_path, template_path + " is not a CSV file")
+    if not is_csv_file(other_filepath):
+        raise NotCSVFileError(other_filepath, other_filepath + " is not a CSV file")
+    if not validate_verifier_type(verifier):
+        raise Invalid_Verifier("Provided verifier is not a valid type")
+    if use_interval == False:
+        total_matches = count_key_matches(template_path, other_filepath)
+        valid_matches = verifier.count_valid_key_matches()
+        percent = valid_matches / total_matches
+        return (percent, is_majority(percent))
+    elif use_interval == True:
+        total_matches = count_interval_key_matches(template_path, other_filepath)
+        valid_matches = verifier.count_valid_interval_key_matches()
+        percent = valid_matches / total_matches
+        return (percent, is_majority(percent))
+
+
+def evaluate_against_directory(
+    template_path: str, directory_path: str, verifier, use_interval=False
+):
+    if not is_csv_file(template_path):
+        raise NotCSVFileError(template_path, template_path + " is not a CSV file")
+    if not os.path.isdir(directory_path):
+        raise ValueError(directory_path + " is not a directory")
+    for file in os.listdir(directory_path):
+        if not is_csv_file(file):
+            raise NotCSVFileError(file, file + " is not a CSV file")
+        if use_interval == False:
+            total_matches = count_key_matches(template_path, file)
+            valid_matches = verifier.count_valid_key_matches()
+            percent = valid_matches / total_matches
+            print(file, percent, is_majority(percent))
+        elif use_interval == True:
+            total_matches = count_interval_key_matches(template_path, file)
+            valid_matches = verifier.count_valid_interval_key_matches()
+            percent = valid_matches / total_matches
+            print(file, percent, is_majority(percent))
+
+
+def is_majority(percent: float):
+    if percent > 0.50:
+        return True
+    else:
+        return False
 
 
 def validate_verifier_type(verifier):
