@@ -1,4 +1,10 @@
-from td_data_dict import TD_Data_Dictionary, KIT_Type
+# Copyright 2022, Alvin Kuruvilla <alvineasokuruvilla@gmail.com>
+
+# Use of this source code is governed by an MIT-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/MIT.
+
+from td_data_dict import KIT_Type
 import pickle
 from utils import strip_filename
 import os
