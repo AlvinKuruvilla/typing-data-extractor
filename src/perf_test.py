@@ -1,6 +1,8 @@
 import argparse
+from lib2to3.pgen2 import driver
 import sys
 from typing import Optional, Sequence
+from pickle_driver import PickleDriver
 from td_data_dict import TD_Data_Dictionary, KIT_Type
 from rich.traceback import install
 from utils import is_csv_file
@@ -33,15 +35,22 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not is_csv_file(input_path) or not is_csv_file(other_path):
         sys.exit()
     data_dict = TD_Data_Dictionary(input_path)
-    # pairs = data_dict.get_key_pairs()
+    driver = PickleDriver()
+    pairs = data_dict.get_key_pairs()
     # print(pairs)
     r_verifier = AbsoluteVerifier(input_path, other_path, 1.0)
     # r_verifier.find_all_valid_keys()
     data_dict = TD_Data_Dictionary(input_path)
-    verifier = AbsoluteVerifier(input_path, other_path, 2.0)
-    print(evaluate_against_file(input_path, other_path, verifier))
-    print(data_dict.make_kht_dictionary())
-    print(KIT_Type.Press_Press is KIT_Type.Press_Release)
+    print(data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press))
+    driver.wipe_file("test.csv")
+    driver.write_dictionary_to_file(
+        data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press), "test.txt"
+    )
+    print(driver.read_to_list("test.txt"))
+    # verifier = AbsoluteVerifier(input_path, other_path, 2.0)
+    # print(evaluate_against_file(input_path, other_path, verifier))
+    # print(data_dict.make_kht_dictionary())
+    # print(KIT_Type.Press_Press is KIT_Type.Press_Release)
 
 
 if __name__ == "__main__":
