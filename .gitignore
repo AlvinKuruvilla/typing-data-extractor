@@ -10,3 +10,5 @@ testdata
 *.pstats
 reports
 *.profile
+*.txt
+*.json
