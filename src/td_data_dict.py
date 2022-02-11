@@ -4,7 +4,6 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from unittest import removeResult
 from utils import (
     is_csv_file,
     pair_subtract,
@@ -71,7 +70,6 @@ class TD_Data_Dictionary:
                 ret.append(v.get_time())
         return ret
 
-    # TODO: Maybe this should be in a table instead
     def debug(self):
         table = PrettyTable()
         table.field_names = ["Key", "Action", "Time"]
@@ -175,22 +173,30 @@ class TD_Data_Dictionary:
             res[key] = self.get_all_times_for_key(key)
         return res
 
-    def make_kit_dictionary(self, keyset: List[str], kit_type: KIT_Type):
+    def make_kit_dictionary(self, nested_keyset: List[List[str]], kit_type: KIT_Type):
         # NOTE: This function will not calculate the average of multiple times.
         # Instead we will just store duplicate time entries in a list of values
-        assert len(keyset) == 2
+
+        # We also want to call this method for each element in the KIT_Type
+        # enum because we wamt to store all data combinations for each user
+        # FIXME: We heavily nest the value list in several sub lists, purely
+        # because some of the functions called here return lists, so we should probably change that somehow
         res = {}
         if kit_type == KIT_Type.Press_Press:
-            res[tuple(keyset)] = [self.get_press_press_time(keyset)]
+            for keyset in nested_keyset:
+                res[tuple(keyset)] = [self.get_press_press_times_for_keyset(keyset)]
             return res
         elif kit_type == KIT_Type.Press_Release:
-            res[tuple(keyset)] = [self.get_press_release_time(keyset)]
+            for keyset in nested_keyset:
+                res[tuple(keyset)] = [self.get_press_release_times_for_keyset(keyset)]
             return res
         elif kit_type == KIT_Type.Release_Press:
-            res[tuple(keyset)] = [self.get_release_press_time(keyset)]
+            for keyset in nested_keyset:
+                res[tuple(keyset)] = [self.get_release_press_times_for_keyset(keyset)]
             return res
         elif kit_type == KIT_Type.Release_Release:
-            res[tuple(keyset)] = [self.get_release_release_time(keyset)]
+            for keyset in nested_keyset:
+                res[tuple(keyset)] = [self.get_release_release_times_for_keyset(keyset)]
             return res
 
     def get_all_times_for_key(self, key: str):
@@ -219,6 +225,34 @@ class TD_Data_Dictionary:
             if k.get_key_name() == key and v.get_action() == "R":
                 result.append(float(v.get_time()))
         return result
+
+    def get_press_press_times_for_keyset(self, keyset: List[str]):
+        key1 = keyset[0]
+        key2 = keyset[1]
+        key1_presses = self.get_press_times_for_key(key1)
+        key2_presses = self.get_press_times_for_key(key2)
+        return [key1_presses, key2_presses]
+
+    def get_press_release_times_for_keyset(self, keyset: List[str]):
+        key1 = keyset[0]
+        key2 = keyset[1]
+        key1_presses = self.get_press_times_for_key(key1)
+        key2_presses = self.get_release_times_for_key(key2)
+        return [key1_presses, key2_presses]
+
+    def get_release_press_times_for_keyset(self, keyset: List[str]):
+        key1 = keyset[0]
+        key2 = keyset[1]
+        key1_presses = self.get_release_times_for_key(key1)
+        key2_presses = self.get_press_times_for_key(key2)
+        return [key1_presses, key2_presses]
+
+    def get_release_release_times_for_keyset(self, keyset: List[str]):
+        key1 = keyset[0]
+        key2 = keyset[1]
+        key1_presses = self.get_release_times_for_key(key1)
+        key2_presses = self.get_release_times_for_key(key2)
+        return [key1_presses, key2_presses]
 
     def get_press_press_time(self, keys: List[str]):
         key1 = keys[0]
