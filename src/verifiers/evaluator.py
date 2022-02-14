@@ -4,8 +4,7 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from bbmass_conv import NotCSVFileError
-from exceptions import Invalid_Verifier
+from exceptions import *
 from utils import is_csv_file
 from verifiers.relative_verifier import RelativeVerifier
 from verifiers.absolute_verifier import AbsoluteVerifier
@@ -53,6 +52,24 @@ def evaluate_against_directory(
             valid_matches = verifier.count_valid_interval_key_matches()
             percent = valid_matches / total_matches
             print(file, percent, is_majority(percent))
+
+
+def evaluate_against_dictionaries(
+    template_dict,
+    verfication_dict,
+    verifier,
+    use_interval=False,
+):
+    if use_interval == False:
+        total_matches = count_key_matches_from_dicts(template_dict, verfication_dict)
+        valid_matches = verifier.count_valid_key_matches()
+        percent = valid_matches / total_matches
+        print(percent, is_majority(percent))
+    elif use_interval == True:
+        total_matches = count_key_matches_from_dicts(template_dict, verfication_dict)
+        valid_matches = verifier.count_valid_interval_key_matches()
+        percent = valid_matches / total_matches
+        print(percent, is_majority(percent))
 
 
 def is_majority(percent: float):

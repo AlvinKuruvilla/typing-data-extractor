@@ -74,3 +74,21 @@ def count_interval_key_matches(
     template_file_path: str, verification_file_path: str
 ) -> int:
     return len(find_matching_interval_keys(template_file_path, verification_file_path))
+
+
+def find_matching_keys_from_dicts(template_data, verification_data):
+    """
+    The parameter dictionairs are just normal dicts
+    The dictionaries this method takes as parameters are assumed to be ones containing
+    the KIT and KHT values to avoid on the fly computation"""
+    matches = []
+    template_keys = template_data.keys()
+    verification_keys = verification_data.keys()
+    for key in template_keys:
+        if key in verification_keys:
+            matches.append(key)
+    return matches
+
+
+def count_key_matches_from_dicts(template_data, verification_data):
+    return len(find_matching_keys_from_dicts(template_data, verification_data))

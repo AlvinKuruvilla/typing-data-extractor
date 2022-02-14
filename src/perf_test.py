@@ -12,7 +12,7 @@ from td_data_dict import TD_Data_Dictionary, KIT_Type
 from rich.traceback import install
 from utils import is_csv_file
 from verifiers.absolute_verifier import AbsoluteVerifier
-from verifiers.evaluator import evaluate_against_file
+from verifiers.evaluator import evaluate_against_dictionaries
 from pprint import pprint
 
 install()
@@ -47,14 +47,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     r_verifier = AbsoluteVerifier(input_path, other_path, 1.0)
     # r_verifier.find_all_valid_keys()
     data_dict = TD_Data_Dictionary(input_path)
+    comp_dict = TD_Data_Dictionary(other_path)
     kht = data_dict.make_kht_dictionary()
+    kht2 = comp_dict.make_kht_dictionary()
     kit = data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press)
     driver.wipe_file("test.txt")
     driver.write_kht_dictionary_to_file(kht, "test.txt")
     driver.write_kit_dictionary_to_file(kit, KIT_Type.Press_Press, "test.txt")
-    pprint(driver.read_to_list("KHT_test.txt"))
-    # verifier = AbsoluteVerifier(input_path, other_path, 2.0)
-    # print(evaluate_against_file(input_path, other_path, verifier))
+    # pprint(driver.read_to_list("KHT_test.txt"))
+    verifier = AbsoluteVerifier(input_path, other_path, 2.0)
+    evaluate_against_dictionaries(kht, kht2, verifier)
     # print(data_dict.make_kht_dictionary())
     # print(KIT_Type.Press_Press is KIT_Type.Press_Release)
 
