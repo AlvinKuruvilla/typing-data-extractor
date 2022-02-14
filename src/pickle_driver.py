@@ -8,6 +8,7 @@ from td_data_dict import KIT_Type
 import pickle
 from utils import strip_filename
 import os
+import pandas as pd
 
 # TODO: For some of these fucntions we should only open file if the file exists to begin with
 class PickleDriver:
@@ -55,3 +56,7 @@ class PickleDriver:
         """Delete the contents of the file at the specified path without deleting it"""
         with open(filepath, "w") as handle:
             handle.truncate()
+
+    def load_as_dictionary(self, filepath: str):
+        df = pd.read_pickle(filepath)
+        return df.to_dict()
