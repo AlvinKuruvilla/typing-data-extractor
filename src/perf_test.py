@@ -7,13 +7,12 @@
 import argparse
 import sys
 from typing import Optional, Sequence
-from pickle_driver import PickleDriver
-from td_data_dict import TD_Data_Dictionary, KIT_Type
+from converters.pickle_driver import PickleDriver
+from core.td_data_dict import TD_Data_Dictionary, KIT_Type
 from rich.traceback import install
-from utils import is_csv_file
+from core.utils import is_csv_file
 from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.evaluator import evaluate_against_dictionaries
-from pprint import pprint
 
 install()
 
@@ -54,7 +53,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     driver.wipe_file("test.txt")
     driver.write_kht_dictionary_to_file(kht, "test.txt")
     driver.write_kit_dictionary_to_file(kit, KIT_Type.Press_Press, "test.txt")
-    # pprint(driver.read_to_list("KHT_test.txt"))
     verifier = AbsoluteVerifier(input_path, other_path, 2.0)
     evaluate_against_dictionaries(kht, kht2, verifier)
     # print(data_dict.make_kht_dictionary())

@@ -4,9 +4,9 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from td_data_dict import KIT_Type
+from core.td_data_dict import KIT_Type
 import pickle
-from utils import strip_filename
+from core.utils import strip_filename
 import os
 import pandas as pd
 

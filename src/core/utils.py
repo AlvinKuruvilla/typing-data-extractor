@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/MIT.
 
 import os
-from log import Logger
+from core.log import Logger
 from typing import List, Any
 from numpy import mean
 
@@ -117,7 +117,7 @@ def is_float(n: str) -> bool:
         return False
 
 
-def verify_file_exists(filename: str, extensions: List[str]):
+def verify_file_exists(filename: str, extensions: List[str]) -> bool:
     """
     Verify that a file exists at least one of the provided extensions
     Parameters
@@ -149,7 +149,7 @@ def strip_filename(filepath: str, keep_extension: bool = True):
           Defaults to True so the extension will be kept
     Returns
     -------
-    bool
+    Any[several types]
     """
     filename = os.path.basename(filepath)
     if keep_extension:

@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from td_data_dict import TD_Data_Dictionary
+from core.td_data_dict import TD_Data_Dictionary
 import json
 
 # TODO: For some of these fucntions we should only open file if the file exists to begin with

@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from utils import (
+from core.utils import (
     is_csv_file,
     pair_subtract,
     chunks,

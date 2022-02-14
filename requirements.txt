@@ -3,3 +3,4 @@ prettytable==3.0.0
 datapane==0.13.2
 rich==11.1.0
 matplotlib==3.5.1
+numpy==1.22.2

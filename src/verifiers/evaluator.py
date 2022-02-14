@@ -4,8 +4,8 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from exceptions import *
-from utils import is_csv_file
+from core.exceptions import *
+from core.utils import is_csv_file
 from verifiers.relative_verifier import RelativeVerifier
 from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.similarity_verifier import SimilarityVerifier

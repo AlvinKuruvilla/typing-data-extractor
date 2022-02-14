@@ -5,9 +5,9 @@
 # https://opensource.org/licenses/MIT.
 
 import statistics
-from log import Logger
+from core.log import Logger
 from .verifier_utils import find_matching_keys
-from td_data_dict import TD_Data_Dictionary
+from core.td_data_dict import TD_Data_Dictionary
 
 # TODO: Add interval_key support
 class SimilarityVerifier:

@@ -9,8 +9,8 @@ import csv
 import pandas as pd
 from pathlib import Path
 from rich.traceback import install
-from exceptions import NotCSVFileError
-from utils import is_csv_file
+from core.exceptions import NotCSVFileError
+from core.utils import is_csv_file
 
 install()
 

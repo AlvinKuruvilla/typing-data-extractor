@@ -8,10 +8,10 @@
 import argparse
 import sys
 from typing import Optional, Sequence
-from td_data_dict import TD_Data_Dictionary, make_dataframe
+from core.td_data_dict import TD_Data_Dictionary, make_dataframe
 
 # from verifiers.absolute_verifier import AbsoluteVerifier
-from utils import is_csv_file
+from core.utils import is_csv_file
 from verifiers.reporter import DataReporter
 
 # from verifiers.similarity_verifier import SimilarityVerifier

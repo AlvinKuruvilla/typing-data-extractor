@@ -1,4 +1,4 @@
-from td_data_dict import TD_Data_Dictionary, make_dataframe
+from core.td_data_dict import TD_Data_Dictionary, make_dataframe
 import datapane as dp
 import os
 

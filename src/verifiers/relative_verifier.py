@@ -6,8 +6,8 @@
 
 
 from math import pow
-from td_data_dict import TD_Data_Dictionary
-from log import Logger
+from core.td_data_dict import TD_Data_Dictionary
+from core.log import Logger
 
 from verifiers.verifier_utils import find_matching_keys, find_matching_interval_keys
 

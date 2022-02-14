@@ -4,7 +4,7 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
-from td_data_dict import TD_Data_Dictionary
+from core.td_data_dict import TD_Data_Dictionary
 import pandas as pd
 from typing import List
 
