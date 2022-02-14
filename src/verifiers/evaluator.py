@@ -13,19 +13,19 @@ from verifiers.verifier_utils import *
 import os
 
 
-def evaluate_against_file(template_path, other_filepath, verifier, use_interval=False):
+def evaluate_against_file(template_path, other_filepath, verifier, use_kit=False):
     if not is_csv_file(template_path):
         raise NotCSVFileError(template_path, template_path + " is not a CSV file")
     if not is_csv_file(other_filepath):
         raise NotCSVFileError(other_filepath, other_filepath + " is not a CSV file")
     if not validate_verifier_type(verifier):
         raise Invalid_Verifier("Provided verifier is not a valid type")
-    if use_interval == False:
+    if use_kit == False:
         total_matches = count_key_matches(template_path, other_filepath)
         valid_matches = verifier.count_valid_key_matches()
         percent = valid_matches / total_matches
         return (percent, is_majority(percent))
-    elif use_interval == True:
+    elif use_kit == True:
         total_matches = count_interval_key_matches(template_path, other_filepath)
         valid_matches = verifier.count_valid_interval_key_matches()
         percent = valid_matches / total_matches
@@ -33,7 +33,7 @@ def evaluate_against_file(template_path, other_filepath, verifier, use_interval=
 
 
 def evaluate_against_directory(
-    template_path: str, directory_path: str, verifier, use_interval=False
+    template_path: str, directory_path: str, verifier, use_kit=False
 ):
     if not is_csv_file(template_path):
         raise NotCSVFileError(template_path, template_path + " is not a CSV file")
@@ -42,12 +42,12 @@ def evaluate_against_directory(
     for file in os.listdir(directory_path):
         if not is_csv_file(file):
             raise NotCSVFileError(file, file + " is not a CSV file")
-        if use_interval == False:
+        if use_kit == False:
             total_matches = count_key_matches(template_path, file)
             valid_matches = verifier.count_valid_key_matches()
             percent = valid_matches / total_matches
             print(file, percent, is_majority(percent))
-        elif use_interval == True:
+        elif use_kit == True:
             total_matches = count_interval_key_matches(template_path, file)
             valid_matches = verifier.count_valid_interval_key_matches()
             percent = valid_matches / total_matches
@@ -58,14 +58,14 @@ def evaluate_against_dictionaries(
     template_dict,
     verfication_dict,
     verifier,
-    use_interval=False,
+    use_kit=False,
 ):
-    if use_interval == False:
+    if use_kit == False:
         total_matches = count_key_matches_from_dicts(template_dict, verfication_dict)
         valid_matches = verifier.count_valid_key_matches()
         percent = valid_matches / total_matches
         print(percent, is_majority(percent))
-    elif use_interval == True:
+    elif use_kit == True:
         total_matches = count_key_matches_from_dicts(template_dict, verfication_dict)
         valid_matches = verifier.count_valid_interval_key_matches()
         percent = valid_matches / total_matches

@@ -28,8 +28,8 @@ class AbsoluteVerifier:
     def verification_path(self):
         return self.verification_file_path
 
-    def is_key_valid(self, key: str, use_interval=False) -> bool:
-        if use_interval == False:
+    def is_key_valid(self, key: str, use_kit=False) -> bool:
+        if use_kit == False:
             latencies = self.find_latency_averages(key)
             assert len(latencies) == 2
             return self.check_key_hold_latencies(key)
@@ -38,8 +38,8 @@ class AbsoluteVerifier:
             assert len(latencies) == 2
             return self.check_key_interval_latencies(key)
 
-    def calculate_absolute_score(self, use_interval=False):
-        if use_interval == False:
+    def calculate_absolute_score(self, use_kit=False):
+        if use_kit == False:
             matches = find_matching_keys(
                 self.template_file_path, self.verification_file_path
             )
@@ -52,9 +52,9 @@ class AbsoluteVerifier:
             valids = self.find_all_valid_keys(True)
             return 1 - (len(valids) / len(matches))
 
-    def find_latency_averages(self, key: str, use_interval=False):
+    def find_latency_averages(self, key: str, use_kit=False):
         log = Logger("find_latency_averages")
-        if use_interval == False:
+        if use_kit == False:
             # NOTE: This function does not actually calculate the average latency
             # for the key, rather it perform a lookup on the dictionary returned by calculate_key_hit_time()
             # function for both of the td_data_dict's.
@@ -94,9 +94,9 @@ class AbsoluteVerifier:
             v_latency = verification_inteval_dict.get(key)
             return [t_latency, v_latency]
 
-    def find_all_valid_keys(self, use_interval=False):
+    def find_all_valid_keys(self, use_kit=False):
         valids = []
-        if use_interval == False:
+        if use_kit == False:
             matches = find_matching_keys(
                 self.template_file_path, self.verification_file_path
             )
