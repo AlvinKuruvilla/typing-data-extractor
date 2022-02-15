@@ -13,11 +13,7 @@ from verifiers.verifier_utils import *
 import os
 
 
-def evaluate_against_file(template_path, other_filepath, verifier, use_kit=False):
-    if not is_csv_file(template_path):
-        raise NotCSVFileError(template_path, template_path + " is not a CSV file")
-    if not is_csv_file(other_filepath):
-        raise NotCSVFileError(other_filepath, other_filepath + " is not a CSV file")
+def evaluate_against_files(template_path, other_filepath, verifier, use_kit=False):
     if not validate_verifier_type(verifier):
         raise Invalid_Verifier("Provided verifier is not a valid type")
     if use_kit == False:
@@ -72,7 +68,7 @@ def evaluate_against_dictionaries(
         print(percent, is_majority(percent))
 
 
-def is_majority(percent: float):
+def is_majority(percent: float) -> bool:
     if percent > 0.50:
         return True
     else:
