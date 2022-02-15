@@ -59,4 +59,4 @@ class PickleDriver:
 
     def load_as_dictionary(self, filepath: str):
         df = pd.read_pickle(filepath)
-        return df.to_dict()
+        return df
