@@ -5,7 +5,7 @@
 # https://opensource.org/licenses/MIT.
 
 from core.td_data_dict import TD_Data_Dictionary
-from .verifier_utils import find_matching_keys, is_between, find_matching_interval_keys
+from ..core.td_utils import find_matching_keys, is_between, find_matching_interval_keys
 from core.log import Logger
 
 

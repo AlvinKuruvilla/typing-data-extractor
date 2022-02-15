@@ -17,7 +17,7 @@ from verifiers.reporter import DataReporter
 # from verifiers.similarity_verifier import SimilarityVerifier
 from verifiers.relative_verifier import RelativeVerifier
 from rich.traceback import install
-from verifiers.verifier_utils import (
+from core.td_utils import (
     find_matching_interval_keys,
     dataframe_from_list,
     find_matching_keys,

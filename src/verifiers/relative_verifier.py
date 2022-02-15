@@ -9,7 +9,7 @@ from math import pow
 from core.td_data_dict import TD_Data_Dictionary
 from core.log import Logger
 
-from verifiers.verifier_utils import find_matching_keys, find_matching_interval_keys
+from core.td_utils import find_matching_keys, find_matching_interval_keys
 
 # NOTE: As far as I can tell this verifier operates on the entire set of verification data
 # i.e. it considers all the KHT values from the verification data as a whole sample and then compares the whole thing

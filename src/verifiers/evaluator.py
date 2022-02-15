@@ -9,7 +9,7 @@ from core.utils import is_csv_file
 from verifiers.relative_verifier import RelativeVerifier
 from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.similarity_verifier import SimilarityVerifier
-from verifiers.verifier_utils import *
+from core.td_utils import *
 import os
 
 
