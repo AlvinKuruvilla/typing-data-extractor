@@ -5,6 +5,7 @@
 # https://opensource.org/licenses/MIT.
 
 import argparse
+from pprint import pprint
 import sys
 from typing import Optional, Sequence
 from converters.pickle_driver import PickleDriver
@@ -12,7 +13,8 @@ from core.td_data_dict import TD_Data_Dictionary, KIT_Type
 from rich.traceback import install
 from core.utils import is_csv_file
 from verifiers.absolute_verifier import AbsoluteVerifier
-from verifiers.evaluator import evaluate_against_dictionaries
+from verifiers.evaluator import evaluate_against_files
+import os
 
 install()
 
@@ -39,24 +41,32 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if not is_csv_file(input_path) or not is_csv_file(other_path):
         sys.exit()
-    data_dict = TD_Data_Dictionary(input_path)
+    # data_dict = TD_Data_Dictionary(input_path)
     driver = PickleDriver()
-    pairs = data_dict.get_key_pairs()
     # print(pairs)
-    r_verifier = AbsoluteVerifier(input_path, other_path, 1.0)
     # r_verifier.find_all_valid_keys()
-    data_dict = TD_Data_Dictionary(input_path)
-    comp_dict = TD_Data_Dictionary(other_path)
-    kht = data_dict.make_kht_dictionary()
-    kht2 = comp_dict.make_kht_dictionary()
-    kit = data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press)
-    driver.wipe_file("test.txt")
-    driver.write_kht_dictionary_to_file(kht, "test.txt")
-    driver.write_kit_dictionary_to_file(kit, KIT_Type.Press_Press, "test.txt")
+    # data_dict = TD_Data_Dictionary(input_path)
+    # comp_dict = TD_Data_Dictionary(other_path)
+    # kht = data_dict.make_kht_dictionary()
+    # kht2 = comp_dict.make_kht_dictionary()
+    # kit = data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press)
+
+    f = os.path.join(os.getcwd(), "testdata", "gen", "gen_User1.csv")
+    f2 = os.path.join(os.getcwd(), "testdata", "gen", "gen_User3.csv")
     verifier = AbsoluteVerifier(input_path, other_path, 2.0)
-    evaluate_against_dictionaries(kht, kht2, verifier)
+    # data_dict = TD_Data_Dictionary(f)
+    # pairs = data_dict.get_key_pairs()
+    # kht = data_dict.make_kht_dictionary()
+    # driver.write_kht_dictionary_to_file(kht, "test3.txt")
+    # pprint(driver.load_as_dictionary("KHT_test3.txt"))
+    # kit = data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press)
+    # pprint(kht)
+    # driver.write_kht_dictionary_to_file(kht, gen_file)
+    # driver.write_kit_dictionary_to_file(kit, KIT_Type.Press_Press, gen_file)
+    # print(driver.load_as_dictionary("KHT_pickled_User1.txt"))
     # print(data_dict.make_kht_dictionary())
     # print(KIT_Type.Press_Press is KIT_Type.Press_Release)
+    print(evaluate_against_files(f, f2, verifier))
 
 
 if __name__ == "__main__":
