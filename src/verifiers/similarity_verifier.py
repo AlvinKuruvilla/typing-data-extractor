@@ -9,7 +9,7 @@ from core.log import Logger
 from ..core.td_utils import find_matching_keys, find_matching_interval_keys
 from core.td_data_dict import TD_Data_Dictionary
 
-# TODO: Add interval_key support
+
 class SimilarityVerifier:
     def __init__(self, template_file_path: str, verification_file_path: str, threshold):
         self.template_file_path = template_file_path
@@ -91,7 +91,7 @@ class SimilarityVerifier:
             matches = find_matching_interval_keys(
                 self.template_file_path, self.verification_file_path
             )
-            valids = self.find_all_valid_keys(True)
+            valids = self.find_all_valid_keys(use_kit=True)
             return 1 - (len(valids) / len(matches))
 
     def is_key_valid(self, key: str, use_kit=False) -> bool:
@@ -105,7 +105,7 @@ class SimilarityVerifier:
             else:
                 return False
         elif use_kit == True:
-            latencies = self.find_latency_averages(key, True)
+            latencies = self.find_latency_averages(key, use_kit=True)
             assert len(latencies) == 2
             sdev = self.calculate_standard_deviation(latencies)
             # print("The standard deviation is: ", sdev)
@@ -140,4 +140,4 @@ class SimilarityVerifier:
         if use_kit == False:
             return len(self.find_all_valid_keys())
         elif use_kit == True:
-            return len(self.find_all_valid_keys(True))
+            return len(self.find_all_valid_keys(use_kit=True))

@@ -34,7 +34,7 @@ class AbsoluteVerifier:
             assert len(latencies) == 2
             return self.check_key_hold_latencies(key)
         else:
-            latencies = self.find_latency_averages(key, True)
+            latencies = self.find_latency_averages(key, use_kit=True)
             assert len(latencies) == 2
             return self.check_key_interval_latencies(key)
 
@@ -49,7 +49,7 @@ class AbsoluteVerifier:
             matches = find_matching_interval_keys(
                 self.template_file_path, self.verification_file_path
             )
-            valids = self.find_all_valid_keys(True)
+            valids = self.find_all_valid_keys(use_kit=True)
             return 1 - (len(valids) / len(matches))
 
     def find_latency_averages(self, key: str, use_kit=False):
@@ -167,4 +167,4 @@ class AbsoluteVerifier:
         return len(self.find_all_valid_keys())
 
     def count_valid_interval_key_matches(self):
-        return len(self.find_all_valid_keys(True))
+        return len(self.find_all_valid_keys(use_kit=True))
