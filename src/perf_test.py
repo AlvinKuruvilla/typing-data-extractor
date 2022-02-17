@@ -44,7 +44,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # data_dict = TD_Data_Dictionary(input_path)
     driver = PickleDriver()
     # print(pairs)
-    # r_verifier.find_all_valid_keys()
+
     # data_dict = TD_Data_Dictionary(input_path)
     # comp_dict = TD_Data_Dictionary(other_path)
     # kht = data_dict.make_kht_dictionary()
@@ -54,22 +54,40 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     f = os.path.join(os.getcwd(), "testdata", "456.csv")
     f2 = os.path.join(os.getcwd(), "testdata", "789.csv")
     verifier = AbsoluteVerifier(f, f2, 2.0)
+
+    valids = verifier.find_all_valid_keys(use_kit=True)
+    print("Valids:", valids)
+    # TODO: To test KIT and eval we have to first generate pickled kit files for "testdata/456.csv" and "testdata/789.csv"
+    # and then change the verifiers paths to point to them
+    verifier.set_template_file_path("KHT_test.txt")
+    verifier.set_verification_file_path("KHT_test3.txt")
+    other_valids = verifier.find_all_valid_keys(is_evaluating=True)
+    print("Other valids:", other_valids)
+
     data_dict = TD_Data_Dictionary(f)
     comp_dict = TD_Data_Dictionary(f2)
-    # pairs = data_dict.get_key_pairs()
-    kht = data_dict.make_kht_dictionary()
-    kht2 = comp_dict.make_kht_dictionary()
-    driver.write_kht_dictionary_to_file(kht, "test.txt")
-    driver.write_kht_dictionary_to_file(kht2, "test3.txt")
+    pairs = data_dict.get_key_pairs()
+    cpairs = comp_dict.get_key_pairs()
+    # kht = data_dict.make_kht_dictionary()
+    # kht2 = comp_dict.make_kht_dictionary()
+    # driver.write_kht_dictionary_to_file(kht, "test.txt")
+    # driver.write_kht_dictionary_to_file(kht2, "test3.txt")
     # pprint(driver.load_as_dictionary("KHT_test3.txt"))
-    # kit = data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press)
+    kit = data_dict.make_kit_dictionary(pairs, KIT_Type.Press_Press)
+    kit2 = comp_dict.make_kit_dictionary(cpairs, KIT_Type.Press_Press)
     # pprint(kht)
     # driver.write_kht_dictionary_to_file(kht, gen_file)
-    # driver.write_kit_dictionary_to_file(kit, KIT_Type.Press_Press, gen_file)
+    driver.write_kit_dictionary_to_file(kit, KIT_Type.Press_Press, "KIT1.txt")
+    driver.write_kit_dictionary_to_file(kit2, KIT_Type.Press_Press, "KIT2.txt")
+    # TODO: Why is there such a big difference between the two verifier passes with and without the eval???
+    verifier.set_template_file_path("KIT_PP_KIT1.txt")
+    verifier.set_verification_file_path("KIT_PP_KIT2.txt")
+    other_valids = verifier.find_all_valid_keys(is_evaluating=True, use_kit=True)
+    print("Other valids:", other_valids)
+
     # print(driver.load_as_dictionary("KHT_pickled_User1.txt"))
     # print(data_dict.make_kht_dictionary())
-    # print(KIT_Type.Press_Press is KIT_Type.Press_Release)
-    print(evaluate_against_files(f, f2, verifier))
+    # print(evaluate_against_files(f, f2, verifier))
 
 
 if __name__ == "__main__":

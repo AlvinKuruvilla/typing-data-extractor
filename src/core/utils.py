@@ -96,7 +96,7 @@ def running_avg(lst: list) -> Any:
     -------
     int
     """
-    return mean(lst)
+    return mean(lst, dtype=object)
 
 
 def is_float(n: str) -> bool:

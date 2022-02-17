@@ -4,9 +4,13 @@
 # license that can be found in the LICENSE file or at
 # https://opensource.org/licenses/MIT.
 
+from converters.pickle_driver import PickleDriver
 from core.td_data_dict import TD_Data_Dictionary
 import pandas as pd
 from typing import List
+from rich.traceback import install
+
+install()
 
 #! I think this is the origin of the bad performance as a whole. We need to figure out a way to improve this function and the calculate_key_hold_time since that is the function be called inside of it
 #! Perhaps we can look into caching the result of calculate_key_hold_time
@@ -92,3 +96,16 @@ def find_matching_keys_from_dicts(template_data, verification_data):
 
 def count_key_matches_from_dicts(template_data, verification_data):
     return len(find_matching_keys_from_dicts(template_data, verification_data))
+
+
+def read_matching_keys_from_files(template_path, verification_path):
+    driver = PickleDriver()
+    matches = []
+    template_dict = driver.load_as_dictionary(template_path)
+    verification_dict = driver.load_as_dictionary(verification_path)
+    template_keys = template_dict.keys()
+    verification_keys = verification_dict.keys()
+    for key in template_keys:
+        if key in verification_keys:
+            matches.append(key)
+    return matches
