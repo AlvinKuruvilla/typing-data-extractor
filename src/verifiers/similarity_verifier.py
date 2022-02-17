@@ -6,7 +6,7 @@
 
 import statistics
 from core.log import Logger
-from ..core.td_utils import find_matching_keys, find_matching_interval_keys
+from core.td_utils import find_matching_keys, find_matching_interval_keys
 from core.td_data_dict import TD_Data_Dictionary
 
 
