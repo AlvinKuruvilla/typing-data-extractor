@@ -56,13 +56,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     verifier = AbsoluteVerifier(f, f2, 2.0)
 
     valids = verifier.find_all_valid_keys(use_kit=True)
-    print("Valids:", valids)
+    # print("Valids:", valids)
     # TODO: To test KIT and eval we have to first generate pickled kit files for "testdata/456.csv" and "testdata/789.csv"
     # and then change the verifiers paths to point to them
     verifier.set_template_file_path("KHT_test.txt")
     verifier.set_verification_file_path("KHT_test3.txt")
     other_valids = verifier.find_all_valid_keys(is_evaluating=True)
-    print("Other valids:", other_valids)
+    # print("Other valids:", other_valids)
 
     data_dict = TD_Data_Dictionary(f)
     comp_dict = TD_Data_Dictionary(f2)
@@ -82,12 +82,28 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # TODO: Why is there such a big difference between the two verifier passes with and without the eval???
     verifier.set_template_file_path("KIT_PP_KIT1.txt")
     verifier.set_verification_file_path("KIT_PP_KIT2.txt")
+    # print("From file:", driver.read_to_list("KIT_PP_KIT1.txt"))
+    ################################################################
     other_valids = verifier.find_all_valid_keys(is_evaluating=True, use_kit=True)
-    print("Other valids:", other_valids)
+    print("With evaluation", other_valids)
+    print(len(other_valids))
+    input()
+    verifier.set_template_file_path(other_path)
+    verifier.set_verification_file_path(input_path)
+    ################################################################
 
-    # print(driver.load_as_dictionary("KHT_pickled_User1.txt"))
-    # print(data_dict.make_kht_dictionary())
-    # print(evaluate_against_files(f, f2, verifier))
+    other_verifier = AbsoluteVerifier(input_path, other_path, 2.0)
+    other_other_valids = other_verifier.find_all_valid_keys(
+        is_evaluating=False, use_kit=True
+    )
+    print("Without evaluation", len(other_other_valids))
+
+
+# print(len(other_other_valids) == len(other_valids))
+
+# print(driver.load_as_dictionary("KHT_pickled_User1.txt"))
+# print(data_dict.make_kht_dictionary())
+# print(evaluate_against_files(f, f2, verifier))
 
 
 if __name__ == "__main__":

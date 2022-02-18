@@ -7,6 +7,7 @@
 import os
 from core.log import Logger
 from typing import List, Any
+import numpy
 
 
 def is_csv_file(path: str) -> bool:
@@ -95,11 +96,7 @@ def running_avg(lst: list) -> Any:
     -------
     int
     """
-    avg = 0
-    l = len(lst)
-    for element in lst:
-        avg += element
-    return avg / l
+    return numpy.unique(numpy.mean(lst, dtype=object))
 
 
 def is_float(n: str) -> bool:

@@ -156,6 +156,8 @@ class TD_Data_Dictionary:
     def calculate_key_interval_time(self, nested_key_list: List[List[str]]):
         store = {}
         for key_set in nested_key_list:
+            # print("Press_Press: ", self.get_press_press_time(key_set))
+            # input("Look at the press press time")
             store[tuple(key_set)] = [
                 self.get_press_press_time(key_set),
                 self.get_press_release_time(key_set),
@@ -184,19 +186,19 @@ class TD_Data_Dictionary:
         res = {}
         if kit_type == KIT_Type.Press_Press:
             for keyset in nested_keyset:
-                res[tuple(keyset)] = [self.get_press_press_times_for_keyset(keyset)]
+                res[tuple(keyset)] = self.get_press_press_times_for_keyset(keyset)
             return res
         elif kit_type == KIT_Type.Press_Release:
             for keyset in nested_keyset:
-                res[tuple(keyset)] = [self.get_press_release_times_for_keyset(keyset)]
+                res[tuple(keyset)] = self.get_press_release_times_for_keyset(keyset)
             return res
         elif kit_type == KIT_Type.Release_Press:
             for keyset in nested_keyset:
-                res[tuple(keyset)] = [self.get_release_press_times_for_keyset(keyset)]
+                res[tuple(keyset)] = self.get_release_press_times_for_keyset(keyset)
             return res
         elif kit_type == KIT_Type.Release_Release:
             for keyset in nested_keyset:
-                res[tuple(keyset)] = [self.get_release_release_times_for_keyset(keyset)]
+                res[tuple(keyset)] = self.get_release_release_times_for_keyset(keyset)
             return res
 
     def get_all_times_for_key(self, key: str):
@@ -213,6 +215,9 @@ class TD_Data_Dictionary:
         result = []
         for k, v in self.data().items():
             if k.get_key_name() == key and v.get_action() == "P":
+                # print("Key: " + k.get_key_name())
+                # print("Time: " + v.get_time())
+                # input("Look at the key and the time")
                 result.append(float(v.get_time()))
         return result
 
@@ -258,6 +263,8 @@ class TD_Data_Dictionary:
         key1 = keys[0]
         key2 = keys[1]
         key1_presses = self.get_press_times_for_key(key1)
+        # print("Key:", key1, "Presses: ", key1_presses)
+        # input("Look here now")
         key2_presses = self.get_press_times_for_key(key2)
         avg1 = running_avg(key1_presses)
         avg2 = running_avg(key2_presses)

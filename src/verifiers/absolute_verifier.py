@@ -11,10 +11,13 @@ from core.td_utils import (
     is_between,
     find_matching_interval_keys,
     read_matching_keys_from_files,
+    flatten,
+    merge_sublists,
 )
 from core.log import Logger
 from rich.traceback import install
 from core.utils import running_avg
+from pprint import pprint
 
 install()
 
@@ -108,12 +111,17 @@ class AbsoluteVerifier:
                 return [t_latency, v_latency]
             else:
                 template_pairs = self.template_td_data_dict.get_key_pairs()
+                # print("Template key pairs:", template_pairs)
+                # print("Length", len(template_pairs))
+                # input("Look at pairs")
                 verification_pairs = self.verification_td_data_dict.get_key_pairs()
+
                 template_inteval_dict = (
                     self.template_td_data_dict.calculate_key_interval_time(
                         template_pairs
                     )
                 )
+                # print("Template Dictionary:", template_inteval_dict)
                 verification_inteval_dict = (
                     self.verification_td_data_dict.calculate_key_interval_time(
                         verification_pairs
@@ -133,6 +141,9 @@ class AbsoluteVerifier:
             key_matches = read_matching_keys_from_files(
                 self.template_file_path, self.verification_file_path
             )
+            # input("Matches")
+            # print(key_matches)
+
             if not key in key_matches:
                 log.km_error("Key not found")
                 return
@@ -142,9 +153,16 @@ class AbsoluteVerifier:
             verification_inteval_dict = driver.load_as_dictionary(
                 self.verification_file_path
             )
+            # input("Verification Dictionary")
+            # print(verification_inteval_dict)
+
             t_latency = template_inteval_dict.get(key)
             v_latency = verification_inteval_dict.get(key)
-            return [t_latency, v_latency]
+            # print(t_latency)
+            # input("Template latency")
+            # print(v_latency)
+            # input("Verification latency")
+            return t_latency, v_latency
 
     def find_all_valid_keys(self, use_kit=False, is_evaluating=False):
         valids = []
@@ -161,7 +179,7 @@ class AbsoluteVerifier:
                 matches = find_matching_interval_keys(
                     self.template_file_path, self.verification_file_path
                 )
-                print("Found", matches)
+                # print("IN HERE")
                 for key in matches:
                     if self.is_key_valid(key, use_kit=True):
                         valids.append(key)
@@ -226,17 +244,26 @@ class AbsoluteVerifier:
     def check_key_interval_latencies(self, key: str, is_evaluating=False):
         if is_evaluating == False:
             latencies = self.find_latency_averages(key, use_kit=True)
+            # print(latencies)
+            # input("Latencies")
             assert len(latencies) == 2
+            # print("Key: %s %s" % key)
+            # print(latencies)
+            # input("Look at the latencies")
             i = 0
             for i in range(len(latencies[0])):
                 if latencies[0][i] > latencies[1][i]:
                     avg = latencies[0][i] / latencies[1][i]
+                    # print("Average: %f" % avg)
+                    # input("Look at the average")
                     if is_between(avg, 1.0, self.THRESHOLD):
                         return True
                     else:
                         return False
                 elif latencies[0][i] < latencies[1][i]:
-                    avg = latencies[0][i] / latencies[1][i]
+                    avg = latencies[1][i] / latencies[0][i]
+                    # print("Average: %f" % avg)
+                    # input("Look at the average")
                     if is_between(avg, 1.0, self.THRESHOLD):
                         return True
                     else:
@@ -250,24 +277,38 @@ class AbsoluteVerifier:
             latencies = self.find_latency_averages(
                 key, use_kit=True, is_evaluating=True
             )
+            # pprint(latencies)
+            # input("Latencies 2")
             assert len(latencies) == 2
             i = 0
             for i in range(len(latencies[0])):
-                if latencies[0][i] > latencies[1][i]:
-                    avg = running_avg(latencies[0][i]) / running_avg(latencies[1][i])
+                # print(running_avg(latencies[0]))
+                # input("Latency")
+                if float(running_avg(latencies[0][i])) > float(
+                    running_avg(latencies[1][i])
+                ):
+                    avg = float(
+                        (running_avg(latencies[0][i]))
+                        / (float(running_avg(latencies[1][i])))
+                    )
                     # print("Average", avg)
                     # input("Hang")
-                    if is_between(running_avg(avg), 1.0, self.THRESHOLD):
+                    if is_between((avg), 1.0, self.THRESHOLD):
                         return True
                     else:
                         return False
-                elif latencies[0][i] < latencies[1][i]:
-                    avg = running_avg(latencies[1][i]) / running_avg(latencies[0][i])
-                    if is_between(running_avg(avg), 1.0, self.THRESHOLD):
+                elif float(running_avg(latencies[0][i])) < float(
+                    running_avg(latencies[1][i])
+                ):
+                    avg = float(
+                        (running_avg(latencies[1][i]))
+                        / (float(running_avg(latencies[0][i])))
+                    )
+                    if is_between((avg), 1.0, self.THRESHOLD):
                         return True
                     else:
                         return False
-                elif latencies[0][i] == latencies[1][i]:
+                elif latencies[0] == latencies[1]:
                     # If the two latnecies are equal than we know the quotient between them will always be 1
                     # and thus, always fall in the inclusive range of (1, THRESHOLD) so we can automatically
                     # just return True

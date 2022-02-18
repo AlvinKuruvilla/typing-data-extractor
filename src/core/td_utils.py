@@ -9,6 +9,7 @@ from core.td_data_dict import TD_Data_Dictionary
 import pandas as pd
 from typing import List
 from rich.traceback import install
+import itertools
 
 install()
 
@@ -109,3 +110,11 @@ def read_matching_keys_from_files(template_path, verification_path):
         if key in verification_keys:
             matches.append(key)
     return matches
+
+
+def flatten(lst):
+    return list(itertools.chain(*lst))
+
+
+def merge_sublists(lst):
+    return list(itertools.chain.from_iterable(lst))
