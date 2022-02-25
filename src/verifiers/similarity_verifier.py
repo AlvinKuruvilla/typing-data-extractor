@@ -36,6 +36,12 @@ class SimilarityVerifier:
     def verification_path(self):
         return self.verification_file_path
 
+    def set_template_file_path(self, new_template_file_path: str):
+        self.template_file_path = new_template_file_path
+
+    def set_verification_file_path(self, new_verification_file_path: str):
+        self.verification_file_path = new_verification_file_path
+
     def calculate_standard_deviation(self, data: list):
         sdev = statistics.pstdev(data)
         return sdev
