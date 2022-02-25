@@ -8,10 +8,12 @@
 import argparse
 import sys
 from typing import Optional, Sequence
+from converters.pickle_driver import PickleDriver
 from core.td_data_dict import TD_Data_Dictionary, make_dataframe
 
 # from verifiers.absolute_verifier import AbsoluteVerifier
 from core.utils import is_csv_file
+from verifiers.absolute_verifier import AbsoluteVerifier
 from verifiers.reporter import DataReporter
 
 # from verifiers.similarity_verifier import SimilarityVerifier
@@ -56,51 +58,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if not is_csv_file(input_path) or not is_csv_file(other_path):
         sys.exit()
-    data_dict = TD_Data_Dictionary(input_path)
-    pairs = data_dict.get_key_pairs()
-    # print(data_dict.calculate_key_interval_time(pairs))
-
-    comp_dict = TD_Data_Dictionary(other_path)
-    # data_dict.calculate_key_hold_time()
-
-    # print(find_matching_keys(input_path, other_path))
-    r_verifier = RelativeVerifier(input_path, other_path, 1.0)
-    r_verifier.find_all_valid_keys()
-    interval_matches = find_matching_interval_keys(input_path, other_path)
-    regular_matches = find_matching_keys(input_path, other_path)
-    # print(r_verifier.find_all_valid_keys())
-    # print(matches)
-    # eval = Verifier_Evaluator(r_verifier, 0.50)
-    # a, b = eval.extract_features()
-    # print("Hello ", *eval.evaluate(a, b))
-    reporter = DataReporter()
-    template_df = make_dataframe(data_dict)
-    verification_df = make_dataframe(comp_dict)
-    source = r_verifier.get_valid_keys_data()
-    print("Source:", source)
-    plot_keys = list(source.keys())
-    plot_values = list(source.values())
-    keys_df = dataframe_from_list(plot_keys, ["Keys"])
-    values_df = dataframe_from_list(plot_values, ["Times"])
-    df = pd.concat([keys_df, values_df], axis=1)
-    # print(df)
-    ax = df.plot.bar(x="Keys", y="Times", rot=0)
-    # print(ax)
-
-    report = dp.Report(
-        dp.DataTable(template_df, caption=f"Template Data"),
-        dp.DataTable(verification_df, caption=f"Verification Data"),
-        dp.DataTable(
-            dataframe_from_list(regular_matches, ["Keys"]),
-            caption="Matching Keys",
-        ),
-        dp.DataTable(
-            dataframe_from_list(compress_interval(interval_matches), ["Keys"]),
-            caption="Matching Interval Keys",
-        ),
-        dp.Plot(ax, caption=r_verifier.class_name()),
-    )
-    report.save(path=os.path.join(reporter.get_report_path(), "test.html"), open=True)
+    verifier = AbsoluteVerifier(input_path, other_path, 2.0)
+    verifier.set_template_file_path("KHT_gen_User1.txt")
+    verifier.set_verification_file_path("KHT_gen_User3.txt")
+    print(verifier.find_all_valid_keys(is_evaluating=True))
+    # f1 = os.path.join(os.getcwd(), "testdata", "g1.csv")
+    # f2 = os.path.join(os.getcwd(), "testdata", "g3.csv")
+    # d = TD_Data_Dictionary(f1)
+    # d2 = TD_Data_Dictionary(f2)
+    # driver = PickleDriver()
+    # k = d.make_kht_dictionary()
+    # k2 = d2.make_kht_dictionary()
+    # driver.write_kht_dictionary_to_file(k, "gen_User1.txt")
+    # driver.write_kht_dictionary_to_file(k2, "gen_User3.txt")
 
 
 if __name__ == "__main__":

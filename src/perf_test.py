@@ -88,8 +88,6 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     print("With evaluation", other_valids)
     print(len(other_valids))
     input()
-    verifier.set_template_file_path(other_path)
-    verifier.set_verification_file_path(input_path)
     ################################################################
 
     other_verifier = AbsoluteVerifier(input_path, other_path, 2.0)
