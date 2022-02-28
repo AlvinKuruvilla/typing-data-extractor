@@ -10,6 +10,7 @@ from core.utils import (
     chunks,
     running_avg,
     is_float,
+    unwrap_string,
 )
 import csv
 from typing import List
@@ -96,6 +97,45 @@ class TD_Data_Dictionary:
             if not k in unique:
                 unique.append(k)
         return unique
+
+    def get_letters(self):
+        letters = [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "s",
+            "t",
+            "u",
+            "v",
+            "w",
+            "x",
+            "y",
+            "z",
+            "key.ctrl",
+            "key.space",
+        ]
+        result = []
+        for k, v in self.data_dict.items():
+            unwrapped_key = unwrap_string(k.get_key_name().lower())
+            if bool(unwrapped_key in letters) == True and v.get_action() == "P":
+                # print("Hello, world!")
+                result.append(unwrapped_key)
+        return result
 
     def get_key_pairs(self):
         unique = self.get_unique_keys()

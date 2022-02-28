@@ -1,6 +1,9 @@
 from core.td_data_dict import TD_Data_Dictionary
 from extractors.word_level_extractor import WordExtractor
 import os
+from rich.traceback import install
+
+install()
 
 
 def test_get_template():
@@ -18,13 +21,9 @@ def test_get_verification():
     assert we.get_verification().data() == d2.data()
 
 
-def test_setters():
-    # For this I think we can use parameters in the test functions like this:
-    # nose2.tools import params
-    # @params("Sir Bedevere", "Miss Islington", "Duck")
-    # def test_is_knight(value):
-    # assert value.startswith('Sir')
-    #
-    # See https://pypi.org/project/nose2/
-
-    pass
+def test_get_words():
+    d1 = TD_Data_Dictionary(os.path.join(os.getcwd(), "testdata", "456.csv"))
+    d2 = TD_Data_Dictionary(os.path.join(os.getcwd(), "testdata", "789.csv"))
+    we = WordExtractor(d1, d2)
+    words = we.get_words(d1)
+    assert len(words) == 2

@@ -1,22 +1,30 @@
 from core.td_data_dict import TD_Data_Dictionary
+from rich.traceback import install
+import copy
+from itertools import groupby
+
+install()
 
 
 def filter_words(data: TD_Data_Dictionary):
-    keys = data.get_all_keys_pressed()
-    for index, key in enumerate(keys):
-        if key.casefold() == "Key.ctrl" or key.casefold() == "'Key.ctrl'":
-            filtered = drop_to_index(keys, index)
-            return filtered
+    """This function removes all instances of Key.ctrl from the list of keys and
+    any repeats because of Press and Realese events"""
+    # NOTE: We may just want to remove all instances of Key.ctrl from the list and anything that follows that
+    keys = data.get_letters()
+    return keys
 
 
-def split_into_words(data):
-    words = []
-    begin = 0
-    for i, j in enumerate(data):
-        if j == "Key.space" or j == "'Key.space'":
-            words.append(data[begin:i])
-            begin = i
-    return words
+def split_by_space(data):
+    return [
+        list(group) for k, group in groupby(data, lambda x: x == "key.space") if not k
+    ]
+
+
+def drop(keys, index):
+    if index < 0 or index >= len(keys):
+        raise IndexError("Provided index is not valid")
+    del keys[index]
+    return keys
 
 
 def drop_to_index(data, index: int):
@@ -51,4 +59,14 @@ class WordExtractor:
         return filter_words(data_dict)
 
     def get_words(self, data_dict: TD_Data_Dictionary):
-        return split_into_words(filter_words(data_dict))
+        items = data_dict.get_letters()
+        temp = copy.deepcopy(items)
+        words = []
+        for i, item in enumerate(items):
+            if item.lower() == "key.ctrl":
+                clean = drop_to_index(temp, i)
+        word_set = split_by_space(clean)
+        print(word_set)
+        for letter_set in word_set:
+            words.append("".join(letter_set))
+        return words

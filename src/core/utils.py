@@ -156,3 +156,9 @@ def strip_filename(filepath: str, keep_extension: bool = True):
         return filename
     else:
         return os.path.splitext(filepath)[0]
+
+
+def unwrap_string(s):
+    """A utility function that converts a "'string'" to a "string" """
+    s = s.replace("'", "")
+    return s
