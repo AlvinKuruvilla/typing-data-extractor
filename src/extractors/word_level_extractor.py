@@ -66,7 +66,6 @@ class WordExtractor:
             if item.lower() == "key.ctrl":
                 clean = drop_to_index(temp, i)
         word_set = split_by_space(clean)
-        print(word_set)
         for letter_set in word_set:
             words.append("".join(letter_set))
         return words

@@ -26,4 +26,6 @@ def test_get_words():
     d2 = TD_Data_Dictionary(os.path.join(os.getcwd(), "testdata", "789.csv"))
     we = WordExtractor(d1, d2)
     words = we.get_words(d1)
+    words2 = we.get_words(d2)
     assert len(words) == 2
+    assert len(words2) == 2
