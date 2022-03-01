@@ -21,6 +21,14 @@ class SimilarityVerifier:
         self.verification_td_data_dict = TD_Data_Dictionary(self.verification_file_path)
         self.THRESHOLD = threshold
 
+    __slots__ = (
+        "template_file_path",
+        "verification_file_path",
+        "THRESHOLD",
+        "template_td_data_dict",
+        "verification_td_data_dict",
+    )
+
     def class_name(self) -> str:
         return "Similarity Verifier"
 

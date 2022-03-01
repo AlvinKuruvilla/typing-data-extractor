@@ -37,6 +37,8 @@ class TD_Data_Value:
     def get_time(self):
         return self.elements[1]
 
+    __slots__ = "elements"
+
 
 class TD_Data_Key:
     def __init__(self, key_name: str):
@@ -44,6 +46,8 @@ class TD_Data_Key:
 
     def get_key_name(self):
         return self.key_name
+
+    __slots__ = "key_name"
 
 
 class TD_Data_Dictionary:
@@ -60,6 +64,8 @@ class TD_Data_Dictionary:
             #     print("line[{}] = {}".format(i, line))
             # for k, v in self.data_dict.items():
             #     print(k.get_key_name(), v.get_action(), v.get_time(), end=" \n")
+
+    __slots__ = ("csv_data_path", "data_dict")
 
     def data(self):
         return self.data_dict
