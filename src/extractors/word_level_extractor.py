@@ -10,6 +10,8 @@ from rich.traceback import install
 import copy
 from itertools import groupby
 
+from verifiers.reporter import DataReporter
+
 install()
 
 
@@ -76,3 +78,7 @@ class WordExtractor:
         for letter_set in word_set:
             words.append("".join(letter_set))
         return words
+
+    def tabulate_words(self, data_dict: TD_Data_Dictionary):
+        reporter = DataReporter()
+        return reporter.tabulate_td_data_dict(data_dict)

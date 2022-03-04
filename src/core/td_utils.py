@@ -10,6 +10,7 @@ import pandas as pd
 from typing import List
 from rich.traceback import install
 import itertools
+import copy
 
 install()
 
@@ -118,3 +119,19 @@ def flatten(lst):
 
 def merge_sublists(lst):
     return list(itertools.chain.from_iterable(lst))
+
+
+# FIXME: The method seems to work and gets both the sets of data, but it doesn't seem to retain one set or the other.
+# I suspect that this is because dictionaries don't support duplicate keys
+def split_dictionary_by_key(dictionary: TD_Data_Dictionary, key):
+    res = []
+    d = {}
+    for k, v in dictionary.data().items():
+        if k.get_key_name().lower() == key:
+            store = copy.deepcopy(d)
+            res.append(store)
+            print("Result", res)
+            d.clear()
+        else:
+            d[k.get_key_name()] = v.get_time()
+    return res
