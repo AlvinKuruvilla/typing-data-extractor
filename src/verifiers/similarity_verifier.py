@@ -12,7 +12,7 @@ from rich.traceback import install
 
 install()
 
-
+# TODO: Add functionallity to __init__ to directly construct a verifier from TD_Data_Dictionary
 class SimilarityVerifier:
     def __init__(self, template_file_path: str, verification_file_path: str, threshold):
         self.template_file_path = template_file_path
