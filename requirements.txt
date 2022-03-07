@@ -5,3 +5,4 @@ rich
 matplotlib
 numpy
 nose2
+scipy
