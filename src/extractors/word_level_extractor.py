@@ -14,7 +14,8 @@ from verifiers.reporter import DataReporter
 
 install()
 
-
+# TODO: This doesn't actually use the KHT value for the letter:
+# - all we have to do is find the press time for the letter and the release time for the letter and store them in the dictionary
 def filter_words(data: TD_Data_Dictionary):
     """This function removes all instances of Key.ctrl from the list of keys and
     any repeats because of Press and Realese events"""
