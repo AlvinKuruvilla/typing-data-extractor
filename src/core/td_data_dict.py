@@ -144,7 +144,9 @@ class TD_Data_Dictionary:
         return result
 
     def get_key_pairs(self):
-        unique = self.get_unique_keys()
+        # NOTE: We use the get_all_keys_pressed() function because we don't want to forget about the pairs that have the same characters
+        # This is because if we don't do this we forget about some key pairs
+        unique = self.get_all_keys_pressed()
         pairs = []
         i = 0
         while i < len(unique):
