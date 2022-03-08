@@ -8,9 +8,6 @@
 from core.td_data_dict import TD_Data_Dictionary
 from extractors.word_level_extractor import WordExtractor
 import os
-from rich.traceback import install
-
-install()
 
 
 def test_get_template():
